@@ -1,25 +1,23 @@
 package com.murun.fict.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 
 public class ErrorResource {
 
-    private String code;
-    private String message;
+    private String errorCode;
+    private String errorMessage;
 
 
     public ErrorResource(String code, String message) {
-        this.code = code;
-        this.message = message;
+        this.errorCode = code;
+        this.errorMessage = message;
     }
 
-    public String getCode() { return code; }
+    public String getErrorCode() { return errorCode; }
 
-    public void setCode(String code) { this.code = code; }
+    public void setErrorCode(String errorCode) { this.errorCode = errorCode; }
 
-    public String getMessage() { return message; }
+    public String getErrorMessage() { return errorMessage; }
 
-    public void setMessage(String message) { this.message = message; }
+    public void setErrorMessage(String errorMessage) { this.errorMessage = errorMessage; }
 
 }

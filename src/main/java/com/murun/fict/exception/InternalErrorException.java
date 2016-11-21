@@ -1,4 +1,4 @@
-package com.murun.fict.exceptions;
+package com.murun.fict.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
