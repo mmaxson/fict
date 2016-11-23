@@ -3,20 +3,15 @@ package com.murun.fict.service;
 import com.murun.fict.model.LegalEntity;
 import com.murun.fict.model.LegalEntityType;
 import com.murun.fict.repository.LegalEntityRepository;
-import com.murun.fict.repository.LegalEntityTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 
 
 @Service
@@ -29,48 +24,31 @@ public class LegalEntityService {
     LegalEntityRepository legalEntityRepository;
 
     @Resource
-    LegalEntityTypeRepository legalEntityTypeRepository;
-
-
-    private Map<String, Integer> legalEntityTypeReverseLookup = new HashMap<>();
-
-    @PostConstruct
-    private void initialize(){
-
-        for(LegalEntityType legalEntityType:legalEntityTypeRepository.findAll()){
-            legalEntityTypeReverseLookup.put(legalEntityType.getLegalEntityTypeText(),legalEntityType.getLegalEntityTypeId());
-        }
-    }
-
-
+    private LegalEntityTypeService legalEntityTypeService;
 
     public List<LegalEntity> getAllLegalEntities(){
         logger.info("getAllEntities");
         List<LegalEntity> legalEntities = new ArrayList<LegalEntity>();
 
-        for(LegalEntity le:legalEntityRepository.findAll()){
-            logger.info(le.toString());
-            legalEntities.add(le);
-        }
+        legalEntityRepository.findAll().stream().forEach(legalEntities::add);
         return legalEntities;
     }
 
 
     public List<LegalEntity> getAllEntitiesFilterByEntityType( String onlyLegalEntityTypeText){
         logger.info("getAllEntitiesFilterByEntityType");
+
         LegalEntity legalEntity = new LegalEntity();
         LegalEntityType legalEntityType =  new LegalEntityType();
-        legalEntityType.setLegalEntityTypeId(legalEntityTypeReverseLookup.get(onlyLegalEntityTypeText));
+        legalEntityType.setLegalEntityTypeId(legalEntityTypeService.getLegalEntityTypeId(onlyLegalEntityTypeText));
         legalEntityType.setLegalEntityTypeText(onlyLegalEntityTypeText);
         legalEntity.setLegalEntityType(legalEntityType);
 
         Example<LegalEntity> example = Example.of(legalEntity);
 
         List<LegalEntity> legalEntities = new ArrayList<LegalEntity>();
-        for(LegalEntity le:legalEntityRepository.findAll(example)){
-            logger.info(le.toString());
-            legalEntities.add(le);
-        }
+        legalEntityRepository.findAll(example).stream().forEach(legalEntities::add);
+
         return legalEntities;
     }
 

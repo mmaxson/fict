@@ -38,6 +38,12 @@ public class LegalEntity implements Serializable {
 
     }
 
+    public LegalEntity(LegalEntityType legalEntityType, Set<EntityName> entityNames, Set<EntityAddress> entityAddresses) {
+        this.legalEntityType = legalEntityType;
+        this.entityNames = entityNames;
+        this.entityAddresses = entityAddresses;
+    }
+
     public Integer getLegalEntityId() {
         return legalEntityId;
     }

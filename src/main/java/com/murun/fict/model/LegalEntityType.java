@@ -12,7 +12,7 @@ public class LegalEntityType implements Serializable {
 
     @Id
     @Column(name = "LEGAL_ENTITY_TYPE_ID")
-    private int legalEntityTypeId;
+    private Integer legalEntityTypeId;
 
     @Column(name = "TEXT")
     private String legalEntityTypeText;
@@ -21,7 +21,7 @@ public class LegalEntityType implements Serializable {
     public LegalEntityType() {
     }
 
-    public int getLegalEntityTypeId() {
+    public Integer getLegalEntityTypeId() {
         return legalEntityTypeId;
     }
 
