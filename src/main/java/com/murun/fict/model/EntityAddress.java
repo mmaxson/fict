@@ -21,11 +21,11 @@ public class EntityAddress implements Serializable {
     private AddressType addressType;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "ADDRESS_ID", nullable = false)
+    @JoinColumn(name = "ADDRESS_ID", nullable = true)
     private Address address ;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "LEGAL_ENTITY_ID")
+    @JoinColumn(name = "LEGAL_ENTITY_ID", nullable = true)
     @JsonBackReference
     private LegalEntity legalEntity;
 
@@ -68,5 +68,30 @@ public class EntityAddress implements Serializable {
         this.legalEntity = legalEntity;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EntityAddress that = (EntityAddress) o;
+
+        if (getEntityAddressId() != null ? !getEntityAddressId().equals(that.getEntityAddressId()) : that.getEntityAddressId() != null)
+            return false;
+        if (getAddressType() != null ? !getAddressType().equals(that.getAddressType()) : that.getAddressType() != null)
+            return false;
+        if (getAddress() != null ? !getAddress().equals(that.getAddress()) : that.getAddress() != null) return false;
+        return getLegalEntity() != null ? getLegalEntity().equals(that.getLegalEntity()) : that.getLegalEntity() == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getEntityAddressId() != null ? getEntityAddressId().hashCode() : 0;
+        result = 31 * result + (getAddressType() != null ? getAddressType().hashCode() : 0);
+        result = 31 * result + (getAddress() != null ? getAddress().hashCode() : 0);
+        result = 31 * result + (getLegalEntity() != null ? getLegalEntity().hashCode() : 0);
+        return result;
+    }
 }
 

@@ -1,9 +1,6 @@
 package com.murun.fict.model;
 
 
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -13,9 +10,9 @@ import java.io.Serializable;
 public class Address implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ADDRESS_ID")
-    private int addressId;
+    private Integer addressId;
 
     @Column(name = "STREET")
     private String street;
@@ -33,12 +30,12 @@ public class Address implements Serializable {
     public Address() {
     }
 
-    public int getAddressId() {
+    public Integer getAddressId() {
         return addressId;
     }
 
 
-    public void setAddressId(int addressId) {
+    public void setAddressId(Integer addressId) {
         this.addressId = addressId;
     }
 
@@ -79,5 +76,14 @@ public class Address implements Serializable {
         return zipCode;
     }
 
-
+    @Override
+    public String toString() {
+        return "Address{" +
+                "addressId=" + addressId +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                '}';
+    }
 }

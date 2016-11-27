@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -26,57 +25,50 @@ public class LegalEntityService {
     @Resource
     private LegalEntityTypeService legalEntityTypeService;
 
-    public List<LegalEntity> getAllLegalEntities(){
-        logger.info("getAllEntities");
-        List<LegalEntity> legalEntities = new ArrayList<LegalEntity>();
-
-        legalEntityRepository.findAll().stream().forEach(legalEntities::add);
-        return legalEntities;
+    public List<LegalEntity> getAllLegalEntities() {
+        logger.info("getAllLegalEntities");
+        return legalEntityRepository.findAll();
     }
 
 
-    public List<LegalEntity> getAllEntitiesFilterByEntityType( String onlyLegalEntityTypeText){
+    public List<LegalEntity> getAllEntitiesFilterByEntityType(String onlyLegalEntityTypeText) {
         logger.info("getAllEntitiesFilterByEntityType");
 
         LegalEntity legalEntity = new LegalEntity();
-        LegalEntityType legalEntityType =  new LegalEntityType();
+        LegalEntityType legalEntityType = new LegalEntityType();
         legalEntityType.setLegalEntityTypeId(legalEntityTypeService.getLegalEntityTypeId(onlyLegalEntityTypeText));
         legalEntityType.setLegalEntityTypeText(onlyLegalEntityTypeText);
         legalEntity.setLegalEntityType(legalEntityType);
 
         Example<LegalEntity> example = Example.of(legalEntity);
-
-        List<LegalEntity> legalEntities = new ArrayList<LegalEntity>();
-        legalEntityRepository.findAll(example).stream().forEach(legalEntities::add);
-
-        return legalEntities;
+        return legalEntityRepository.findAll(example);
     }
 
-   /* public AddressList getByState(String state) {
 
-        AddressList retVal = new AddressList();
+    public LegalEntity getEntityById(int legalEntityId) {
+        logger.info("getEntityById");
+
+        return legalEntityRepository.findOne(legalEntityId);
+    }
+
+    public List<LegalEntity> getLegalEntitiesInState(String state) {
+        logger.info("getLegalEntitiesInState");
+
+        return legalEntityRepository.getEntitiesWithAddressesInState(state);
+    }
 
 
-        retVal.setAll( ();
-        if (retVal.size() != 0) {
-            logger.info("Return from cache.");
+    public List<LegalEntity> getLegalEntitiesInCity(String city) {
+        logger.info("getLegalEntitiesInCity");
 
-        } else {
-
-            retVal.setAll(addressRepository.getAddressByState(state));
-            logger.info("Return from db.");
-            Consumer<String> c = (x) -> jedis.lpush(state, SerializationUtils.serialize(x));
-            retVal.getAll().forEach( address -> c.accept(address) );
-            logger.info("Add to cache.");
-
-        }
-
-        return retVal;
+        return legalEntityRepository.getEntitiesWithAddressesInCity(city);
     }
 
 
 
-	public Optional<Address> getById(int id){
+
+/*
+    public Optional<Address> getById(int id){
         return Optional.of(addressRepository.findOne(id));
 	}
 

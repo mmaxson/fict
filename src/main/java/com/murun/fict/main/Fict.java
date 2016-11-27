@@ -7,8 +7,6 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration;
 import org.springframework.context.ApplicationContext;
 
-import java.util.Arrays;
-
 @SpringBootApplication(exclude={HibernateJpaAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class, JpaBaseConfiguration.class, HibernateJpaAutoConfiguration.class})
 public class Fict {
 

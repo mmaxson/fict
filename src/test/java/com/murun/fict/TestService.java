@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.aspectj.bridge.Version.text;
-
 public class TestService {
 
 
@@ -20,7 +18,7 @@ public class TestService {
         private final Integer entityTypeId;
         private final String entityTypeText;
 
-        LegalEntityTypeTestEnum(int entityTypeId, String entityTypeText) {
+        LegalEntityTypeTestEnum(Integer entityTypeId, String entityTypeText) {
             this.entityTypeId=entityTypeId;
             this.entityTypeText=entityTypeText;
         }
@@ -82,15 +80,16 @@ public class TestService {
         }
     }
 
-    public static LegalEntityType createLegalEntityType( LegalEntityTypeTestEnum legalEntityTypeTestEnum){
+    public static LegalEntityType createLegalEntityType(LegalEntityTypeTestEnum legalEntityTypeTestEnum){
         LegalEntityType retVal = new LegalEntityType();
         retVal.setLegalEntityTypeId(legalEntityTypeTestEnum.entityTypeId());
         retVal.setLegalEntityTypeText(legalEntityTypeTestEnum.entityTypeText());
         return retVal;
     }
 
-    public static EntityName createEntityName(NameType nameType, String name, LegalEntity legalEntity){
+    public static EntityName createEntityName(Integer id, NameType nameType, String name, LegalEntity legalEntity){
         EntityName retVal = new EntityName();
+        retVal.setEntityNameId(id);
         retVal.setNameType(nameType);
         retVal.setName(name);
         retVal.setLegalEntity(legalEntity);
@@ -112,20 +111,23 @@ public class TestService {
         return retVal;
     }
 
-    public static Address createAddress(String label){
+
+
+    public static Address createAddress(String city, String state, String zipCode){
         Address retVal = new Address();
-        retVal.setStreet("street " + label);
-        retVal.setCity("city " + label);
-        retVal.setState("CA");
-        retVal.setZipCode("zip " + label);
+        retVal.setStreet( city + " " + state + " " + zipCode );
+        retVal.setCity(city);
+        retVal.setState(state);
+        retVal.setZipCode(zipCode);
         return retVal;
     }
 
-    public static EntityAddress createEntityAddress(LegalEntity legalEntity, String label, AddressType addrreessType ){
+    public static EntityAddress createEntityAddress(LegalEntity legalEntity, Address address, AddressType addressType ){
+
         EntityAddress retVal = new EntityAddress();
+        retVal.setAddressType(addressType);
         retVal.setLegalEntity(legalEntity);
-        retVal.setAddress(createAddress(label));
-        retVal.setAddressType(addrreessType);
+        retVal.setAddress(address);
 
         return retVal;
     }
@@ -133,35 +135,35 @@ public class TestService {
 
     public static Set<EntityAddress> createEntityAddressesForLegalEntity(LegalEntity legalEntity ){
         Set<EntityAddress> retVal = new HashSet<>();
-        retVal.add(createEntityAddress(legalEntity,legalEntity.getLegalEntityId()+"A", createAddressType(AddressTypeTestEnum.RESIDENCE)));
-        retVal.add(createEntityAddress(legalEntity,legalEntity.getLegalEntityId()+"B", createAddressType(AddressTypeTestEnum.RESIDENCE)));
-        retVal.add(createEntityAddress(legalEntity,legalEntity.getLegalEntityId()+"C", createAddressType(AddressTypeTestEnum.WORK)));
-        retVal.add(createEntityAddress(legalEntity,legalEntity.getLegalEntityId()+"D", createAddressType(AddressTypeTestEnum.MAIL)));
+        retVal.add(createEntityAddress(legalEntity, createAddress("Santa Monica", "CA", "90402"), createAddressType(AddressTypeTestEnum.RESIDENCE)));
+        retVal.add(createEntityAddress(legalEntity, createAddress("Westwood", "CA", "90401"), createAddressType(AddressTypeTestEnum.RESIDENCE)));
+        retVal.add(createEntityAddress(legalEntity, createAddress("Phoenix", "AZ", "910202"), createAddressType(AddressTypeTestEnum.WORK)));
+        retVal.add(createEntityAddress(legalEntity, createAddress("San Antonio", "TX", "78201"), createAddressType(AddressTypeTestEnum.MAIL)));
 
         return retVal;
     }
 
-    public static Set<EntityName> createEntityNamesForIndividualLegalEntity(LegalEntity legalEntity, String nameLabel ){
+    public static Set<EntityName> createEntityNamesForIndividualLegalEntity(LegalEntity legalEntity, String nameLabel){
 
         Set<EntityName> retVal = new HashSet<>();
 
-        retVal.add(createEntityName(createNameType(NameTypeTestEnum.NAME_FIRST),"First Name"+legalEntity.getLegalEntityId(),legalEntity));
-        retVal.add(createEntityName(createNameType(NameTypeTestEnum.NAME_LAST),"Last Name"+nameLabel,legalEntity));
-        retVal.add(createEntityName(createNameType(NameTypeTestEnum.NAME_MIDDLE),"Middle Name"+legalEntity.getLegalEntityId(),legalEntity));
+        retVal.add(createEntityName(1, createNameType(NameTypeTestEnum.NAME_FIRST),"First Name"+nameLabel,legalEntity));
+        retVal.add(createEntityName(2, createNameType(NameTypeTestEnum.NAME_LAST),"Last Name"+nameLabel,legalEntity));
+        retVal.add(createEntityName(3, createNameType(NameTypeTestEnum.NAME_MIDDLE),"Middle Name"+nameLabel,legalEntity));
 
         return retVal;
     }
 
     public static Set<EntityName> createEntityNamesForCorporateLegalEntity(LegalEntity legalEntity, String nameLabel){
         Set<EntityName> retVal = new HashSet<>();
-        retVal.add(createEntityName(createNameType(NameTypeTestEnum.NAME_ORG),"Organization Name"+nameLabel,legalEntity));
+        retVal.add(createEntityName(1, createNameType(NameTypeTestEnum.NAME_ORG),"Organization Name"+nameLabel,legalEntity));
 
         return retVal;
     }
 
     public static Set<EntityName> createEntityNamesForLivingTrustLegalEntity(LegalEntity legalEntity, String nameLabel){
         Set<EntityName> retVal = new HashSet<>();
-        retVal.add(createEntityName(createNameType(NameTypeTestEnum.NAME_TITLE),"Living Trust Name"+nameLabel,legalEntity));
+        retVal.add(createEntityName(1, createNameType(NameTypeTestEnum.NAME_TITLE),"Living Trust Name"+nameLabel,legalEntity));
 
         return retVal;
     }
@@ -169,7 +171,7 @@ public class TestService {
     public static LegalEntity createIndividualLegalEntity(){
         LegalEntity retVal = new LegalEntity();
         retVal.setLegalEntityType(createLegalEntityType(LegalEntityTypeTestEnum.INDIVIDUAL));
-        retVal.setEntityNames(createEntityNamesForIndividualLegalEntity(retVal, "A"));
+      //  retVal.setEntityNames(createEntityNamesForIndividualLegalEntity(retVal, "A"));
         retVal.setEntityAddresses(createEntityAddressesForLegalEntity(retVal));
 
         return retVal;
@@ -178,7 +180,7 @@ public class TestService {
     public static LegalEntity createCorporateLegalEntity(){
         LegalEntity retVal = new LegalEntity();
         retVal.setLegalEntityType(createLegalEntityType(LegalEntityTypeTestEnum.CORPORATION));
-        retVal.setEntityNames(createEntityNamesForCorporateLegalEntity(retVal, "B" ));
+     //   retVal.setEntityNames(createEntityNamesForCorporateLegalEntity(retVal, "B" ));
         retVal.setEntityAddresses(createEntityAddressesForLegalEntity(retVal));
 
         return retVal;
@@ -187,7 +189,7 @@ public class TestService {
     public static LegalEntity createLivingTrustLegalEntity(){
         LegalEntity retVal = new LegalEntity();
         retVal.setLegalEntityType(createLegalEntityType(LegalEntityTypeTestEnum.LIVING_TRUST));
-        retVal.setEntityNames(createEntityNamesForLivingTrustLegalEntity(retVal, "C"));
+      //  retVal.setEntityNames(createEntityNamesForLivingTrustLegalEntity(retVal, "C"));
         retVal.setEntityAddresses(createEntityAddressesForLegalEntity(retVal));
 
         return retVal;

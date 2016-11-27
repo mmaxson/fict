@@ -1,13 +1,10 @@
 package com.murun.fict.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
-
-import static com.sun.xml.internal.ws.policy.sourcemodel.wspolicy.XmlToken.Name;
 
 @javax.persistence.Entity
 @Table(name="ENTITY_NAME")
@@ -16,6 +13,7 @@ public class EntityName implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ENTITY_NAME_ID")
+  //  @JsonIgnore
     private Integer entityNameId;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -28,7 +26,7 @@ public class EntityName implements Serializable {
 
 
     @ManyToOne
-    @JoinColumn(name = "LEGAL_ENTITY_ID")
+    @JoinColumn(name = "LEGAL_ENTITY_ID", nullable = true )
     @JsonBackReference
     private LegalEntity legalEntity;
 

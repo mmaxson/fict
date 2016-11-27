@@ -60,6 +60,10 @@ public class LegalEntityTypeRepositoryTest {
 
     @Test
     public void verifyCount() {
+        LegalEntityType legalEntityTypeSaved = new LegalEntityType();
+        legalEntityTypeSaved.setLegalEntityTypeId(1);
+        legalEntityTypeRepository.save(legalEntityTypeSaved);
+
         assertEquals(legalEntityTypeRepository.count(), legalEntityTypeRepository.findAll().stream().count());
     }
 }

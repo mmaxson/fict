@@ -1,9 +1,11 @@
 package com.murun.fict.model;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 
 @javax.persistence.Entity
@@ -12,20 +14,26 @@ public class LegalEntityType implements Serializable {
 
     @Id
     @Column(name = "LEGAL_ENTITY_TYPE_ID")
+   // @JsonIgnore
     private Integer legalEntityTypeId;
 
-    @Column(name = "TEXT")
+    @Column(name = "LEGAL_ENTITY_TYPE_TEXT")
     private String legalEntityTypeText;
 
 
     public LegalEntityType() {
     }
 
+    public LegalEntityType(Integer legalEntityTypeId, String legalEntityTypeText) {
+        this.legalEntityTypeId = legalEntityTypeId;
+        this.legalEntityTypeText = legalEntityTypeText;
+    }
+
     public Integer getLegalEntityTypeId() {
         return legalEntityTypeId;
     }
 
-    public void setLegalEntityTypeId(int legalEntityTypeId) {
+    public void setLegalEntityTypeId(Integer legalEntityTypeId) {
         this.legalEntityTypeId = legalEntityTypeId;
     }
 
