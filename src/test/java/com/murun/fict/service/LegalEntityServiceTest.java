@@ -69,9 +69,6 @@ public class LegalEntityServiceTest {
         Example<LegalEntity> example = Example.of(exampleLegalEntity);
         legalEntityList1.add(oneLegalEntity);
         when(legalEntityRepository.findAll(example)).thenReturn(legalEntityList1);
-
-
-
     }
 
     @Test
