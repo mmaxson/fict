@@ -66,7 +66,7 @@ public class LegalEntityController {
             legalEntities = legalEntityService.getAllEntitiesFilterByEntityType(legalEntityTypeText);
 
         } else {
-            legalEntities = legalEntityService.getLegalEntitiesInState(state);
+            legalEntities = legalEntityService.getEntitiesWithAddressesInState(state);
         }
         return new ResponseEntity<List<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
     }
@@ -85,7 +85,7 @@ public class LegalEntityController {
             legalEntities = legalEntityService.getAllEntitiesFilterByEntityType(legalEntityTypeText);
 
         } else {
-            legalEntities = legalEntityService.getLegalEntitiesInCity(city);
+            legalEntities = legalEntityService.getEntitiesWithAddressesInCity(city);
         }
         return new ResponseEntity<List<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
     }

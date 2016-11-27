@@ -143,6 +143,18 @@ public class TestService {
         return retVal;
     }
 
+    public static EntityAddress createResidenceAddrForLegalEntity(LegalEntity legalEntity, String street, String state, String zipCode ){
+        return createEntityAddress(legalEntity, createAddress(street, state, zipCode), createAddressType(AddressTypeTestEnum.RESIDENCE));
+    }
+
+    public static EntityAddress createMailingAddrForLegalEntity(LegalEntity legalEntity, String street, String state, String zipCode ){
+        return createEntityAddress(legalEntity, createAddress(street, state, zipCode), createAddressType(AddressTypeTestEnum.RESIDENCE));
+    }
+
+    public static EntityAddress createWorkAddrForLegalEntity(LegalEntity legalEntity, String street, String state, String zipCode ){
+        return createEntityAddress(legalEntity, createAddress(street, state, zipCode), createAddressType(AddressTypeTestEnum.RESIDENCE));
+    }
+
     public static Set<EntityName> createEntityNamesForIndividualLegalEntity(LegalEntity legalEntity, String nameLabel){
 
         Set<EntityName> retVal = new HashSet<>();
@@ -171,27 +183,18 @@ public class TestService {
     public static LegalEntity createIndividualLegalEntity(){
         LegalEntity retVal = new LegalEntity();
         retVal.setLegalEntityType(createLegalEntityType(LegalEntityTypeTestEnum.INDIVIDUAL));
-      //  retVal.setEntityNames(createEntityNamesForIndividualLegalEntity(retVal, "A"));
-        retVal.setEntityAddresses(createEntityAddressesForLegalEntity(retVal));
-
         return retVal;
     }
 
     public static LegalEntity createCorporateLegalEntity(){
         LegalEntity retVal = new LegalEntity();
         retVal.setLegalEntityType(createLegalEntityType(LegalEntityTypeTestEnum.CORPORATION));
-     //   retVal.setEntityNames(createEntityNamesForCorporateLegalEntity(retVal, "B" ));
-        retVal.setEntityAddresses(createEntityAddressesForLegalEntity(retVal));
-
         return retVal;
     }
 
     public static LegalEntity createLivingTrustLegalEntity(){
         LegalEntity retVal = new LegalEntity();
         retVal.setLegalEntityType(createLegalEntityType(LegalEntityTypeTestEnum.LIVING_TRUST));
-      //  retVal.setEntityNames(createEntityNamesForLivingTrustLegalEntity(retVal, "C"));
-        retVal.setEntityAddresses(createEntityAddressesForLegalEntity(retVal));
-
         return retVal;
     }
 

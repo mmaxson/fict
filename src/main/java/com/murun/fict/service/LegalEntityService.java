@@ -51,15 +51,15 @@ public class LegalEntityService {
         return legalEntityRepository.findOne(legalEntityId);
     }
 
-    public List<LegalEntity> getLegalEntitiesInState(String state) {
-        logger.info("getLegalEntitiesInState");
+    public List<LegalEntity> getEntitiesWithAddressesInState(String state) {
+        logger.info("getEntitiesWithAddressesInState");
 
         return legalEntityRepository.getEntitiesWithAddressesInState(state);
     }
 
 
-    public List<LegalEntity> getLegalEntitiesInCity(String city) {
-        logger.info("getLegalEntitiesInCity");
+    public List<LegalEntity> getEntitiesWithAddressesInCity(String city) {
+        logger.info("getEntitiesWithAddressesInCity");
 
         return legalEntityRepository.getEntitiesWithAddressesInCity(city);
     }
