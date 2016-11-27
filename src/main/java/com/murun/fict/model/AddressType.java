@@ -24,6 +24,11 @@ public class AddressType implements Serializable {
     public AddressType() {
     }
 
+    public AddressType(Integer addressTypeId, String addressTypeText) {
+        this.addressTypeId = addressTypeId;
+        this.addressTypeText = addressTypeText;
+    }
+
     public Integer getAddressTypeId() {
         return addressTypeId;
     }

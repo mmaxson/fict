@@ -4,6 +4,7 @@ package com.murun.fict.control;
 import com.murun.fict.TestService;
 import com.murun.fict.main.ApplicationConfig;
 import com.murun.fict.model.LegalEntity;
+import com.murun.fict.service.AddressTypeService;
 import com.murun.fict.service.LegalEntityService;
 import com.murun.fict.service.LegalEntityTypeService;
 import org.junit.Test;
@@ -21,8 +22,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
+import static com.murun.fict.TestService.createMailingAddrForLegalEntity;
+import static com.murun.fict.TestService.createResidenceAddrForLegalEntity;
+import static com.murun.fict.TestService.createWorkAddrForLegalEntity;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
@@ -53,6 +58,9 @@ public class LegalEntityControllerTest {
     @MockBean
     LegalEntityTypeService legalEntityTypeService;
 
+    @MockBean
+    AddressTypeService addressTypeService;
+
 
     @Test
     public void testGetAllEntities() throws Exception {
@@ -75,7 +83,7 @@ public class LegalEntityControllerTest {
 
 
     @Test
-    public void shouldReturnBadRequest() throws Exception {
+    public void shouldReturnBadRequestForBadEntityType() throws Exception {
 
         List<LegalEntity> legalEntities = new ArrayList<>();
         legalEntities.add(TestService.createIndividualLegalEntity());
@@ -106,4 +114,94 @@ public class LegalEntityControllerTest {
                 .andExpect(jsonPath("$[0].legalEntityType.legalEntityTypeText", is("Corporation")) );
     }
 
+
+    @Test
+    public void shouldGetById() throws Exception {
+
+        LegalEntity legalEntity = TestService.createCorporateLegalEntity();
+        legalEntity.setLegalEntityId(1);
+
+        given(legalEntityService.getEntityById(1)).willReturn(legalEntity);
+
+        mockMvc.perform( get("/entities/id/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.legalEntityId", is(1)) );
+    }
+
+
+    @Test
+    public void shouldGetByCity() throws Exception {
+
+        List<LegalEntity> legalEntityList = new ArrayList<>();
+        legalEntityList.add(TestService.createCorporateLegalEntity());
+        legalEntityList.add(TestService.createIndividualLegalEntity());
+
+        legalEntityList.get(0).setEntityAddresses(new HashSet<>());
+        legalEntityList.get(0).getEntityAddresses().add((createResidenceAddrForLegalEntity(legalEntityList.get(0), "Santa Monica", "CA", "90402")));
+        legalEntityList.get(0).getEntityAddresses().add((createMailingAddrForLegalEntity(legalEntityList.get(0), "Westwood", "AZ", "90402")));
+
+
+        given(legalEntityService.getEntitiesWithAddressesInCity("Westwood")).willReturn(legalEntityList);
+
+        mockMvc.perform( get("/entities/city/Westwood"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    public void shouldGetByState() throws Exception {
+
+        List<LegalEntity> legalEntityList = new ArrayList<>();
+        legalEntityList.add(TestService.createCorporateLegalEntity());
+        legalEntityList.add(TestService.createIndividualLegalEntity());
+
+        legalEntityList.get(0).setEntityAddresses(new HashSet<>());
+        legalEntityList.get(0).getEntityAddresses().add((createResidenceAddrForLegalEntity(legalEntityList.get(0), "Santa Monica", "CA", "90402")));
+        legalEntityList.get(0).getEntityAddresses().add((createMailingAddrForLegalEntity(legalEntityList.get(0), "Westwood", "AZ", "90402")));
+
+
+        given(legalEntityService.getEntitiesWithAddressesInState("CA")).willReturn(legalEntityList);
+
+        mockMvc.perform( get("/entities/state/CA"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    public void shouldGetByEntityType() throws Exception {
+
+        List<LegalEntity> legalEntityList = new ArrayList<>();
+        legalEntityList.add(TestService.createCorporateLegalEntity());
+        legalEntityList.add(TestService.createIndividualLegalEntity());
+
+        legalEntityList.get(0).setEntityAddresses(new HashSet<>());
+        legalEntityList.get(0).getEntityAddresses().add((createResidenceAddrForLegalEntity(legalEntityList.get(0), "Santa Monica", "CA", "90402")));
+        legalEntityList.get(0).getEntityAddresses().add((createMailingAddrForLegalEntity(legalEntityList.get(0), "Westwood", "AZ", "90402")));
+
+        given(addressTypeService.isValidAddressType(TestService.AddressTypeTestEnum.RESIDENCE.addressTypeText())).willReturn(true);
+        given(legalEntityService.getAllEntitiesWithAddressesWithAddressType(TestService.AddressTypeTestEnum.RESIDENCE.addressTypeText())).willReturn(legalEntityList);
+
+        mockMvc.perform( get("/entities/address-type/Residence"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    public void shouldReturnBadRequestForBadAddressType() throws Exception {
+        List<LegalEntity> legalEntityList = new ArrayList<>();
+        legalEntityList.add(TestService.createCorporateLegalEntity());
+        legalEntityList.add(TestService.createIndividualLegalEntity());
+
+        legalEntityList.get(0).setEntityAddresses(new HashSet<>());
+        legalEntityList.get(0).getEntityAddresses().add((createResidenceAddrForLegalEntity(legalEntityList.get(0), "Santa Monica", "CA", "90402")));
+        legalEntityList.get(0).getEntityAddresses().add((createMailingAddrForLegalEntity(legalEntityList.get(0), "Westwood", "AZ", "90402")));
+
+        given(addressTypeService.isValidAddressType(TestService.AddressTypeTestEnum.RESIDENCE.addressTypeText())).willReturn(false);
+        mockMvc.perform( get("/entities/address-type/Residence"))
+                .andExpect(status().isBadRequest());
+
+    }
+
+
 }
+

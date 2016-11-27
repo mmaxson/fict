@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Set;
 
 import static com.murun.fict.TestService.createAddress;
+import static com.murun.fict.TestService.createResidenceAddrForLegalEntity;
+import static com.murun.fict.TestService.createWorkAddrForLegalEntity;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -50,6 +52,9 @@ public class LegalEntityServiceTest {
 
     @MockBean
     LegalEntityTypeService legalEntityTypeService;
+
+    @MockBean
+    AddressTypeService addressTypeService;
 
     private List<LegalEntity> legalEntityList = new ArrayList<>();
     private List<LegalEntity> legalEntityList1 = new ArrayList<>();
@@ -96,11 +101,11 @@ public class LegalEntityServiceTest {
         legalEntityList.add(TestService.createIndividualLegalEntity());
 
         legalEntityList.get(0).setEntityAddresses(new HashSet<>());
-        legalEntityList.get(0).getEntityAddresses().add((TestService.createResidenceAddrForLegalEntity(legalEntityList.get(0), "Santa Monica", "CA", "90402")));
-        legalEntityList.get(0).getEntityAddresses().add((TestService.createResidenceAddrForLegalEntity(legalEntityList.get(0), "Westwood", "AZ", "90402")));
+        legalEntityList.get(0).getEntityAddresses().add((createResidenceAddrForLegalEntity(legalEntityList.get(0), "Santa Monica", "CA", "90402")));
+        legalEntityList.get(0).getEntityAddresses().add((createResidenceAddrForLegalEntity(legalEntityList.get(0), "Westwood", "AZ", "90402")));
 
         legalEntityList.get(1).setEntityAddresses(new HashSet<>());
-        legalEntityList.get(1).getEntityAddresses().add((TestService.createResidenceAddrForLegalEntity(legalEntityList.get(1), "Phoenix", "AZ", "90402")));
+        legalEntityList.get(1).getEntityAddresses().add((createResidenceAddrForLegalEntity(legalEntityList.get(1), "Phoenix", "AZ", "90402")));
 
         when(legalEntityRepository.getEntitiesWithAddressesInState("AZ")).thenReturn(legalEntityList);
         assertEquals(2, legalEntityService.getEntitiesWithAddressesInState("AZ").size());
@@ -114,14 +119,33 @@ public class LegalEntityServiceTest {
         legalEntityList.add(TestService.createIndividualLegalEntity());
 
         legalEntityList.get(0).setEntityAddresses(new HashSet<>());
-        legalEntityList.get(0).getEntityAddresses().add((TestService.createResidenceAddrForLegalEntity(legalEntityList.get(0), "Santa Monica", "CA", "90402")));
-        legalEntityList.get(0).getEntityAddresses().add((TestService.createResidenceAddrForLegalEntity(legalEntityList.get(0), "Westwood", "AZ", "90402")));
+        legalEntityList.get(0).getEntityAddresses().add((createResidenceAddrForLegalEntity(legalEntityList.get(0), "Santa Monica", "CA", "90402")));
+        legalEntityList.get(0).getEntityAddresses().add((createResidenceAddrForLegalEntity(legalEntityList.get(0), "Westwood", "AZ", "90402")));
 
         legalEntityList.get(1).setEntityAddresses(new HashSet<>());
-        legalEntityList.get(1).getEntityAddresses().add((TestService.createResidenceAddrForLegalEntity(legalEntityList.get(1), "Phoenix", "AZ", "90402")));
+        legalEntityList.get(1).getEntityAddresses().add((createResidenceAddrForLegalEntity(legalEntityList.get(1), "Phoenix", "AZ", "90402")));
 
         when(legalEntityRepository.getEntitiesWithAddressesInCity("Santa Monica")).thenReturn(legalEntityList.subList(0,1));
         assertEquals(1, legalEntityService.getEntitiesWithAddressesInCity("Santa Monica").size());
     }
 
+
+    @Test
+    public void shouldGetEntitiesWithAddressesWithAddressType() throws Exception {
+        List<LegalEntity> legalEntityList = new ArrayList<>();
+        legalEntityList.add(TestService.createCorporateLegalEntity());
+        legalEntityList.add(TestService.createIndividualLegalEntity());
+
+        legalEntityList.get(0).setEntityAddresses(new HashSet<>());
+        legalEntityList.get(0).getEntityAddresses().add((createResidenceAddrForLegalEntity(legalEntityList.get(0), "Santa Monica", "CA", "90402")));
+        legalEntityList.get(0).getEntityAddresses().add((TestService.createMailingAddrForLegalEntity(legalEntityList.get(0), "Westwood", "AZ", "90402")));
+
+        legalEntityList.get(1).setEntityAddresses(new HashSet<>());
+        legalEntityList.get(1).getEntityAddresses().add((createWorkAddrForLegalEntity(legalEntityList.get(1), "Phoenix", "AZ", "90402")));
+
+        when(addressTypeService.getAddressTypeId("Residence")).thenReturn( TestService.AddressTypeTestEnum.RESIDENCE.addressTypeId() );
+
+        when(legalEntityRepository.getEntitiesWithAddressTypeId(TestService.AddressTypeTestEnum.RESIDENCE.addressTypeId())).thenReturn(legalEntityList.subList(0,1));
+        assertEquals(1, legalEntityService.getAllEntitiesWithAddressesWithAddressType("Residence").size());
+    }
 }

@@ -25,6 +25,9 @@ public class LegalEntityService {
     @Resource
     private LegalEntityTypeService legalEntityTypeService;
 
+    @Resource
+    private AddressTypeService addressTypeService;
+
     public List<LegalEntity> getAllLegalEntities() {
         logger.info("getAllLegalEntities");
         return legalEntityRepository.findAll();
@@ -65,7 +68,12 @@ public class LegalEntityService {
     }
 
 
+    public List<LegalEntity> getAllEntitiesWithAddressesWithAddressType(String onlyAddressTypeText) {
+        logger.info("getAllEntitiesWithAddressesWithAddressType");
 
+        Integer addressTypeId = addressTypeService.getAddressTypeId(onlyAddressTypeText);
+        return legalEntityRepository.getEntitiesWithAddressTypeId(addressTypeId);
+    }
 
 /*
     public Optional<Address> getById(int id){

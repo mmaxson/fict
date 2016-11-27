@@ -24,6 +24,13 @@ public interface LegalEntityRepository extends JpaRepository<LegalEntity, Intege
             + "where lower(address.city) = lower(:city)")
     public List<LegalEntity> getEntitiesWithAddressesInCity(@Param("city") String city);
 
+    @Query("select distinct legalEntity from LegalEntity as legalEntity  "
+            + "join legalEntity.entityAddresses as addresses "
+            + "join addresses.address as address "
+            + "join addresses.addressType as addressType "
+            + "where lower(addressType.addressTypeId) = lower(:addressTypeId)")
+    public List<LegalEntity> getEntitiesWithAddressTypeId(@Param("addressTypeId") Integer addressTypeId);
+
 
 
 }
