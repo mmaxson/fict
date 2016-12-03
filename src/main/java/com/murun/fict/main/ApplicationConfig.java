@@ -4,10 +4,16 @@ import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import org.h2.server.web.WebServlet;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -68,6 +74,9 @@ public class ApplicationConfig {
 
     @Resource
     private Environment env;
+
+    @Resource
+    private JedisConnectionFactory jedisConnFactory;
 
     @Profile("dev")
     @Bean
@@ -136,6 +145,28 @@ public class ApplicationConfig {
     @Bean
     public Jackson2ObjectMapperBuilder configureObjectMapper() {
         return new Jackson2ObjectMapperBuilder().modulesToInstall(Hibernate5Module.class);
+    }
+
+
+    @Bean
+    public StringRedisSerializer stringRedisSerializer() {
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        return stringRedisSerializer;
+    }
+
+    @Bean
+    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory cf) {
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<String, String>();
+        redisTemplate.setConnectionFactory(cf);
+        return redisTemplate;
+    }
+
+    @Bean
+    public CacheManager cacheManager(RedisTemplate redisTemplate) {
+        RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
+
+        cacheManager.setDefaultExpiration(300);
+        return cacheManager;
     }
 
   /*  @Bean

@@ -103,15 +103,12 @@ public class TestService {
         return retVal;
     }
 
-
     public static AddressType createAddressType(AddressTypeTestEnum addressType){
         AddressType retVal = new AddressType();
         retVal.setAddressTypeId(addressType.addressTypeId());
         retVal.setAddressTypeText(addressType.addressTypeText());
         return retVal;
     }
-
-
 
     public static Address createAddress(String city, String state, String zipCode){
         Address retVal = new Address();
@@ -133,37 +130,16 @@ public class TestService {
     }
 
 
-    public static Set<EntityAddress> createEntityAddressesForLegalEntity(LegalEntity legalEntity ){
-        Set<EntityAddress> retVal = new HashSet<>();
-        retVal.add(createEntityAddress(legalEntity, createAddress("Santa Monica", "CA", "90402"), createAddressType(AddressTypeTestEnum.RESIDENCE)));
-        retVal.add(createEntityAddress(legalEntity, createAddress("Westwood", "CA", "90401"), createAddressType(AddressTypeTestEnum.RESIDENCE)));
-        retVal.add(createEntityAddress(legalEntity, createAddress("Phoenix", "AZ", "910202"), createAddressType(AddressTypeTestEnum.WORK)));
-        retVal.add(createEntityAddress(legalEntity, createAddress("San Antonio", "TX", "78201"), createAddressType(AddressTypeTestEnum.MAIL)));
-
-        return retVal;
-    }
-
     public static EntityAddress createResidenceAddrForLegalEntity(LegalEntity legalEntity, String street, String state, String zipCode ){
         return createEntityAddress(legalEntity, createAddress(street, state, zipCode), createAddressType(AddressTypeTestEnum.RESIDENCE));
     }
 
     public static EntityAddress createMailingAddrForLegalEntity(LegalEntity legalEntity, String street, String state, String zipCode ){
-        return createEntityAddress(legalEntity, createAddress(street, state, zipCode), createAddressType(AddressTypeTestEnum.RESIDENCE));
+        return createEntityAddress(legalEntity, createAddress(street, state, zipCode), createAddressType(AddressTypeTestEnum.MAIL));
     }
 
     public static EntityAddress createWorkAddrForLegalEntity(LegalEntity legalEntity, String street, String state, String zipCode ){
-        return createEntityAddress(legalEntity, createAddress(street, state, zipCode), createAddressType(AddressTypeTestEnum.RESIDENCE));
-    }
-
-    public static Set<EntityName> createEntityNamesForIndividualLegalEntity(LegalEntity legalEntity, String nameLabel){
-
-        Set<EntityName> retVal = new HashSet<>();
-
-        retVal.add(createEntityName(1, createNameType(NameTypeTestEnum.NAME_FIRST),"First Name"+nameLabel,legalEntity));
-        retVal.add(createEntityName(2, createNameType(NameTypeTestEnum.NAME_LAST),"Last Name"+nameLabel,legalEntity));
-        retVal.add(createEntityName(3, createNameType(NameTypeTestEnum.NAME_MIDDLE),"Middle Name"+nameLabel,legalEntity));
-
-        return retVal;
+        return createEntityAddress(legalEntity, createAddress(street, state, zipCode), createAddressType(AddressTypeTestEnum.WORK));
     }
 
     public static Set<EntityName> createEntityNamesForCorporateLegalEntity(LegalEntity legalEntity, String nameLabel){
@@ -198,15 +174,6 @@ public class TestService {
         return retVal;
     }
 
-    public static List<LegalEntity> createLegalEntityList(){
-
-        List<LegalEntity> retVal = new ArrayList<>();
-        retVal.add(createIndividualLegalEntity());
-        retVal.add(createCorporateLegalEntity());
-        retVal.add(createLivingTrustLegalEntity());
-
-        return retVal;
-    }
 }
 
 

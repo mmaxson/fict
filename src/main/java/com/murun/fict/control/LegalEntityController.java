@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController()
@@ -55,7 +56,12 @@ public class LegalEntityController {
         if (id <= 0) {
             throw new IllegalArgumentException(id + " is not a valid entity id.");
         }
-        LegalEntity legalEntity = legalEntityService.getEntityById(id);
+        LegalEntity legalEntity =  new LegalEntity();
+        Optional<LegalEntity> result = legalEntityService.getEntityById(id);
+        if ( result.isPresent() ) {
+            legalEntity = result.get();
+        }
+
         return new ResponseEntity<LegalEntity>(legalEntity, new HttpHeaders(), HttpStatus.OK);
     }
 

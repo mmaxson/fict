@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import static com.murun.fict.TestService.createMailingAddrForLegalEntity;
 import static com.murun.fict.TestService.createResidenceAddrForLegalEntity;
@@ -121,7 +122,7 @@ public class LegalEntityControllerTest {
         LegalEntity legalEntity = TestService.createCorporateLegalEntity();
         legalEntity.setLegalEntityId(1);
 
-        given(legalEntityService.getEntityById(1)).willReturn(legalEntity);
+        given(legalEntityService.getEntityById(1)).willReturn(Optional.of(legalEntity));
 
         mockMvc.perform( get("/entities/id/1"))
                 .andExpect(status().isOk())

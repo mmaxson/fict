@@ -1,16 +1,20 @@
 package com.murun.fict.service;
 
+import com.murun.fict.model.EntityAddress;
 import com.murun.fict.model.LegalEntity;
-import com.murun.fict.model.LegalEntityType;
 import com.murun.fict.repository.LegalEntityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Example;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 
 @Service
@@ -28,43 +32,54 @@ public class LegalEntityService {
     @Resource
     private AddressTypeService addressTypeService;
 
+    @Cacheable(value = "getAllLegalEntities")
     public List<LegalEntity> getAllLegalEntities() {
         logger.info("getAllLegalEntities");
         return legalEntityRepository.findAll();
     }
 
-
     public List<LegalEntity> getAllEntitiesFilterByEntityType(String onlyLegalEntityTypeText) {
         logger.info("getAllEntitiesFilterByEntityType");
 
-        LegalEntity legalEntity = new LegalEntity();
-        LegalEntityType legalEntityType = new LegalEntityType();
-        legalEntityType.setLegalEntityTypeId(legalEntityTypeService.getLegalEntityTypeId(onlyLegalEntityTypeText));
-        legalEntityType.setLegalEntityTypeText(onlyLegalEntityTypeText);
-        legalEntity.setLegalEntityType(legalEntityType);
-
-        Example<LegalEntity> example = Example.of(legalEntity);
-        return legalEntityRepository.findAll(example);
+        Integer legalEntityTypeId = legalEntityTypeService.getLegalEntityTypeId(onlyLegalEntityTypeText);
+        return getAllLegalEntities().stream().filter(x -> x.getLegalEntityType().getLegalEntityTypeId().equals(legalEntityTypeId)).collect(toList());
     }
 
-
-    public LegalEntity getEntityById(int legalEntityId) {
+    public Optional<LegalEntity> getEntityById(int legalEntityId) {
         logger.info("getEntityById");
 
-        return legalEntityRepository.findOne(legalEntityId);
+        return getAllLegalEntities().stream().filter(x->x.getLegalEntityId().equals(legalEntityId)).findFirst();
     }
 
     public List<LegalEntity> getEntitiesWithAddressesInState(String state) {
         logger.info("getEntitiesWithAddressesInState");
 
-        return legalEntityRepository.getEntitiesWithAddressesInState(state);
+        List<LegalEntity> retVal = new ArrayList<>();
+        for (LegalEntity legalEntity : getAllLegalEntities()) {
+
+            Optional<EntityAddress> entityAddress = legalEntity.getEntityAddresses().stream().filter(y -> y.getAddress().getState().equals(state)).findFirst();
+            if (entityAddress.isPresent()) {
+                retVal.add(legalEntity);
+            }
+        }
+
+        return retVal;
     }
 
 
     public List<LegalEntity> getEntitiesWithAddressesInCity(String city) {
         logger.info("getEntitiesWithAddressesInCity");
 
-        return legalEntityRepository.getEntitiesWithAddressesInCity(city);
+        List<LegalEntity> retVal = new ArrayList<>();
+        for (LegalEntity legalEntity : getAllLegalEntities()) {
+
+            Optional<EntityAddress> entityAddress = legalEntity.getEntityAddresses().stream().filter(y -> y.getAddress().getCity().equals(city)).findFirst();
+            if (entityAddress.isPresent()) {
+                retVal.add(legalEntity);
+            }
+        }
+
+        return retVal;
     }
 
 
@@ -72,23 +87,17 @@ public class LegalEntityService {
         logger.info("getAllEntitiesWithAddressesWithAddressType");
 
         Integer addressTypeId = addressTypeService.getAddressTypeId(onlyAddressTypeText);
-        return legalEntityRepository.getEntitiesWithAddressTypeId(addressTypeId);
+
+        List<LegalEntity> retVal = new ArrayList<>();
+        for (LegalEntity legalEntity : getAllLegalEntities()) {
+            Optional<EntityAddress> entityAddress = legalEntity.getEntityAddresses().stream().filter(y -> y.getAddressType().getAddressTypeId().equals(addressTypeId)).findFirst();
+            if (entityAddress.isPresent()) {
+                retVal.add(legalEntity);
+            }
+        }
+
+        return retVal;
     }
-
-/*
-    public Optional<Address> getById(int id){
-        return Optional.of(addressRepository.findOne(id));
-	}
-
-	public int updateAddress( Address address ){
-        Address ret = addressRepository.save( address );
-		return ret.getLegalEntityId();
-	}
-
-    public int createAddress( Address address ){
-        Address ret = addressRepository.save( address );
-        return ret.getLegalEntityId();
-    }*/
 
 
 }
