@@ -1,6 +1,7 @@
 package com.murun.fict.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Column;
@@ -15,9 +16,9 @@ public class NameType implements Serializable {
 
     @Id
     @Column(name = "NAME_TYPE_ID")
- //   @JsonIgnore
     private Integer nameTypeId;
 
+    @JsonProperty("name type")
     @Column(name = "NAME_TYPE_TEXT")
     private String nameTypeText;
 

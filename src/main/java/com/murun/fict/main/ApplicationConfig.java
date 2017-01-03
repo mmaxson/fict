@@ -3,9 +3,11 @@ package com.murun.fict.main;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import org.h2.server.web.WebServlet;
 import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -21,6 +23,12 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -28,18 +36,14 @@ import java.util.Properties;
 
 
 @EnableTransactionManagement
-
 @ComponentScan(basePackages="com.murun.*")
-
-
-
-
-@PropertySource("classpath:/properties/${spring.profiles.active}/application.properties")
-
+//@PropertySource("classpath:/properties/${spring.profiles.active}/application.properties")
 @EnableWebSecurity
 @EnableJpaRepositories("com.murun.fict.*")
 @EnableCaching
 @Configuration
+@EnableSwagger2
+@RefreshScope
 public class ApplicationConfig {
 
     private static final String PROPERTY_NAME_DATABASE_DRIVER = "jdbc.driverClassName";
@@ -70,8 +74,6 @@ public class ApplicationConfig {
     private static final String PROPERTY_VALUE_ID_NEW_GENERATOR_MAPPINGS = "true";
 
 
-
-
     @Resource
     private Environment env;
 
@@ -89,6 +91,7 @@ public class ApplicationConfig {
 
     @Bean
     public DataSource dataSource() {
+
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
         dataSource.setDriverClassName(env.getRequiredProperty(PROPERTY_NAME_DATABASE_DRIVER));
@@ -116,7 +119,6 @@ public class ApplicationConfig {
         return entityManagerFactoryBean;
     }
 
-
     private Properties hibProperties() {
         Properties properties = new Properties();
         properties.put(PROPERTY_NAME_HIBERNATE_DIALECT,	env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT));
@@ -134,7 +136,6 @@ public class ApplicationConfig {
 
         return properties;
     }
-
     @Bean
     public JpaTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -142,6 +143,7 @@ public class ApplicationConfig {
         return transactionManager;
     }
 
+    @Primary
     @Bean
     public Jackson2ObjectMapperBuilder configureObjectMapper() {
         return new Jackson2ObjectMapperBuilder().modulesToInstall(Hibernate5Module.class);
@@ -169,6 +171,27 @@ public class ApplicationConfig {
         return cacheManager;
     }
 
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(apiInfo());
+    }
+
+    private ApiInfo apiInfo() {
+        ApiInfo apiInfo = new ApiInfo(
+                "entity",
+                "Entity API",
+                "1.0",
+                "Terms of service",
+                "mmurun@gmail.com",
+                "License of API",
+                "API license URL");
+        return apiInfo;
+    }
   /*  @Bean
     public String kmsEndPoint() {
         return env.getProperty(PROPERTY_NAME_KMS_ENDPOINT);

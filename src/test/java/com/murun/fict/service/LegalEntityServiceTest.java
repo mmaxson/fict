@@ -3,11 +3,8 @@ package com.murun.fict.service;
 
 import com.murun.fict.TestService;
 import com.murun.fict.main.ApplicationConfig;
-import com.murun.fict.model.EntityAddress;
 import com.murun.fict.model.LegalEntity;
-import com.murun.fict.model.LegalEntityType;
 import com.murun.fict.repository.LegalEntityRepository;
-import com.murun.fict.repository.LegalEntityTypeRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,17 +12,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Example;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
 import static com.murun.fict.TestService.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
