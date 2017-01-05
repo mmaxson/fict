@@ -21,7 +21,7 @@ import java.util.Optional;
 @RequestMapping("/entities")
 public class LegalEntityController {
 
-    private static final Logger logger = LoggerFactory.getLogger(LegalEntityController.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Resource
     private LegalEntityService legalEntityService;

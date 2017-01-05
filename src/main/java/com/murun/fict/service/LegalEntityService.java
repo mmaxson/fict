@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class LegalEntityService {
 
-    private static final Logger logger = LoggerFactory.getLogger(LegalEntityService.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Resource
     LegalEntityRepository legalEntityRepository;

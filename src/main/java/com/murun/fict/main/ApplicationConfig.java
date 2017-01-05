@@ -1,9 +1,13 @@
 package com.murun.fict.main;
 
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import org.flywaydb.core.Flyway;
 import org.h2.server.web.WebServlet;
 import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -32,12 +36,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.Properties;
 
 
 @EnableTransactionManagement
 @ComponentScan(basePackages="com.murun.*")
-//@PropertySource("classpath:/properties/${spring.profiles.active}/application.properties")
+
 @EnableWebSecurity
 @EnableJpaRepositories("com.murun.fict.*")
 @EnableCaching
@@ -45,6 +50,7 @@ import java.util.Properties;
 @EnableSwagger2
 @RefreshScope
 public class ApplicationConfig {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final String PROPERTY_NAME_DATABASE_DRIVER = "jdbc.driverClassName";
     private static final String PROPERTY_NAME_DATABASE_PASSWORD = "jdbc.password";
@@ -61,17 +67,10 @@ public class ApplicationConfig {
     private static final String PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
 
 
-    private static final String PROPERTY_NAME_HIBERNATE_IMPLICIT_NAMING_STRATEGY = "hibernate.implicit_naming_strategy";
-    private static final String PROPERTY_NAME_HIBERNATE_PHYSICAL_NAMING_STRATEGY = "hibernate.physical_naming_strategy";
+    private static final String PROPERTY_NAME_HIBERNATE_ID_NEW_GENERATOR_MAPPINGS =  "hibernate.id.new_generator_mappings";
 
-
-    private static final String PROPERTY_NAME_KMS_ENDPOINT = "kms.endpoint";
-    private static final String PROPERTY_NAME_KMS_KEYID = "kms.keyId";
 
     private static final String PROPERTY_VALUE_ENTITYMANAGER_PACKAGES_TO_SCAN = "com.murun.fict.*";
-
-    private static final String PROPERTY_NAME_ID_NEW_GENERATOR_MAPPINGS = "hibernate.id.new_generator_mappings";
-    private static final String PROPERTY_VALUE_ID_NEW_GENERATOR_MAPPINGS = "true";
 
 
     @Resource
@@ -128,11 +127,7 @@ public class ApplicationConfig {
         properties.put(PROPERTY_NAME_HIBERNATE_CONNECTION_POOL_SIZE, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_CONNECTION_POOL_SIZE));
         properties.put(PROPERTY_NAME_HIBERNATE_DEFAULT_SCHEMA, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DEFAULT_SCHEMA));
         properties.put(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO));
-        properties.put(PROPERTY_NAME_ID_NEW_GENERATOR_MAPPINGS, PROPERTY_VALUE_ID_NEW_GENERATOR_MAPPINGS);
-
-      //  properties.put(PROPERTY_NAME_HIBERNATE_IMPLICIT_NAMING_STRATEGY, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_IMPLICIT_NAMING_STRATEGY));
-     //   properties.put(PROPERTY_NAME_HIBERNATE_PHYSICAL_NAMING_STRATEGY, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_PHYSICAL_NAMING_STRATEGY));
-
+        properties.put(PROPERTY_NAME_HIBERNATE_ID_NEW_GENERATOR_MAPPINGS, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_ID_NEW_GENERATOR_MAPPINGS));
 
         return properties;
     }
@@ -192,6 +187,9 @@ public class ApplicationConfig {
                 "API license URL");
         return apiInfo;
     }
+
+
+
   /*  @Bean
     public String kmsEndPoint() {
         return env.getProperty(PROPERTY_NAME_KMS_ENDPOINT);

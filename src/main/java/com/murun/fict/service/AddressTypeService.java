@@ -16,8 +16,7 @@ import java.util.Map;
 @Transactional
 public class AddressTypeService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AddressTypeService.class);
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Resource
     AddressTypeRepository addressTypeRepository;

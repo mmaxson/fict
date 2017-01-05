@@ -62,6 +62,7 @@ public class LegalEntityTypeRepositoryTest {
     public void verifyCount() {
         LegalEntityType legalEntityTypeSaved = new LegalEntityType();
         legalEntityTypeSaved.setLegalEntityTypeId(1);
+        legalEntityTypeSaved.setLegalEntityTypeText("Text");
         legalEntityTypeRepository.save(legalEntityTypeSaved);
 
         assertEquals(legalEntityTypeRepository.count(), legalEntityTypeRepository.findAll().stream().count());

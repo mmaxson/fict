@@ -16,8 +16,7 @@ import java.util.Map;
 @Transactional
 public class LegalEntityTypeService {
 
-    private static final Logger logger = LoggerFactory.getLogger(LegalEntityTypeService.class);
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Resource
     LegalEntityTypeRepository legalEntityTypeRepository;
