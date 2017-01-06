@@ -158,13 +158,13 @@ public class ApplicationConfig {
     public CacheManager cacheManager(RedisTemplate redisTemplate) {
         RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
 
-        cacheManager.setDefaultExpiration(300);
+        cacheManager.setDefaultExpiration(-1);
         return cacheManager;
     }
 
     @Bean
     public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.SPRING_WEB)
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
