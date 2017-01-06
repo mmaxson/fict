@@ -1,13 +1,10 @@
 package com.murun.fict.main;
 
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
-import org.flywaydb.core.Flyway;
 import org.h2.server.web.WebServlet;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -36,7 +33,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.Properties;
 
 
