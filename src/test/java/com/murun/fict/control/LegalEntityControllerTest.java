@@ -1,16 +1,18 @@
 package com.murun.fict.control;
 
 
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.murun.fict.TestService;
-import com.murun.fict.main.ApplicationConfig;
+import com.murun.fict.main.ApplicationConfiguration;
 import com.murun.fict.model.LegalEntity;
 import com.murun.fict.service.AddressTypeService;
 import com.murun.fict.service.LegalEntityService;
 import com.murun.fict.service.LegalEntityTypeService;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
@@ -21,14 +23,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.murun.fict.TestService.createMailingAddrForLegalEntity;
 import static com.murun.fict.TestService.createResidenceAddrForLegalEntity;
-import static com.murun.fict.TestService.createWorkAddrForLegalEntity;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
@@ -36,18 +39,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ContextConfiguration(classes= ApplicationConfig.class)
+@ContextConfiguration(classes= {ApplicationConfiguration.class})
 //@WebMvcTest(LegalEntityControllerTest.class)  // cannot be used with SpringBootTest
 
 @AutoConfigureWebMvc
 @AutoConfigureMockMvc
 public class LegalEntityControllerTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(LegalEntityControllerTest.class);
-
 
     @Autowired
     private MockMvc mockMvc;
@@ -62,6 +63,26 @@ public class LegalEntityControllerTest {
     @MockBean
     AddressTypeService addressTypeService;
 
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule(9001);
+
+
+    @Before
+    public void preSetup() throws Exception {
+        long unixTimestamp = Instant.now().plusSeconds(10).getEpochSecond();
+        stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathEqualTo("/murun/auth/oauth/check_token"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"aud\":[\"oauth-resource\"],\"exp\":" + unixTimestamp +  ",\"user_name\":\"marku\",\"authorities\":[\"ROLE_ADMIN\",\"ROLE_USER\"],\"client_id\":\"trusted-client\",\"scope\":[\"read\",\" write\",\" trust\"]}")));
+
+    }
+
+
+    @After
+    public void tearDown() {
+
+    }
 
     @Test
     public void testGetAllEntities() throws Exception {
@@ -74,7 +95,9 @@ public class LegalEntityControllerTest {
 
         given(legalEntityService.getAllLegalEntities()).willReturn(legalEntities);
 
-        mockMvc.perform( get("/entities"))
+        mockMvc.perform( get( "/entities" )
+                .param("access_token", "token"))
+
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].legalEntityType.legalEntityTypeText", is("Individual")) )
@@ -95,7 +118,8 @@ public class LegalEntityControllerTest {
         given(legalEntityTypeService.isValidLegalEntityType("ZZZ")).willReturn(false);
         given(legalEntityService.getAllLegalEntities()).willReturn(legalEntities);
 
-        mockMvc.perform( get("/entities?entity_type='ZZZ'"))
+        mockMvc.perform( get("/entities?entity_type='ZZZ'")
+                .param("access_token", "token"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -109,7 +133,8 @@ public class LegalEntityControllerTest {
         given(legalEntityTypeService.isValidLegalEntityType("Corporation")).willReturn(true);
         given(legalEntityService.getAllEntitiesFilterByEntityType("Corporation")).willReturn(legalEntities);
 
-        mockMvc.perform( get("/entities?entity_type=Corporation"))
+        mockMvc.perform( get("/entities?entity_type=Corporation")
+                .param("access_token", "token"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].legalEntityType.legalEntityTypeText", is("Corporation")) );
@@ -124,7 +149,8 @@ public class LegalEntityControllerTest {
 
         given(legalEntityService.getEntityById(1)).willReturn(Optional.of(legalEntity));
 
-        mockMvc.perform( get("/entities/id/1"))
+        mockMvc.perform( get("/entities/id/1")
+                .param("access_token", "token"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.legalEntityId", is(1)) );
     }
@@ -144,7 +170,8 @@ public class LegalEntityControllerTest {
 
         given(legalEntityService.getEntitiesWithAddressesInCity("Westwood")).willReturn(legalEntityList);
 
-        mockMvc.perform( get("/entities/city/Westwood"))
+        mockMvc.perform( get("/entities/city/Westwood")
+                .param("access_token", "token"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
     }
@@ -163,7 +190,8 @@ public class LegalEntityControllerTest {
 
         given(legalEntityService.getEntitiesWithAddressesInState("CA")).willReturn(legalEntityList);
 
-        mockMvc.perform( get("/entities/state/CA"))
+        mockMvc.perform( get("/entities/state/CA")
+                .param("access_token", "token"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
     }
@@ -182,7 +210,8 @@ public class LegalEntityControllerTest {
         given(addressTypeService.isValidAddressType(TestService.AddressTypeTestEnum.RESIDENCE.addressTypeText())).willReturn(true);
         given(legalEntityService.getAllEntitiesWithAddressesWithAddressType(TestService.AddressTypeTestEnum.RESIDENCE.addressTypeText())).willReturn(legalEntityList);
 
-        mockMvc.perform( get("/entities/address-type/Residence"))
+        mockMvc.perform( get("/entities/address-type/Residence")
+                .param("access_token", "token"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
     }
@@ -198,7 +227,8 @@ public class LegalEntityControllerTest {
         legalEntityList.get(0).getEntityAddresses().add((createMailingAddrForLegalEntity(legalEntityList.get(0), "Westwood", "AZ", "90402")));
 
         given(addressTypeService.isValidAddressType(TestService.AddressTypeTestEnum.RESIDENCE.addressTypeText())).willReturn(false);
-        mockMvc.perform( get("/entities/address-type/Residence"))
+        mockMvc.perform( get("/entities/address-type/Residence")
+                .param("access_token", "token"))
                 .andExpect(status().isBadRequest());
 
     }

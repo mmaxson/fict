@@ -1,15 +1,12 @@
 package com.murun.fict.service;
 
 
-import com.murun.fict.main.ApplicationConfig;
+import com.murun.fict.main.ApplicationConfiguration;
 import com.murun.fict.model.AddressType;
-import com.murun.fict.model.LegalEntityType;
 import com.murun.fict.repository.AddressTypeRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
@@ -26,13 +23,10 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ContextConfiguration(classes= ApplicationConfig.class)
+@ContextConfiguration(classes= ApplicationConfiguration.class)
 
 
 public class AddressTypeServiceTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(AddressTypeServiceTest.class);
-
 
     @Resource
     AddressTypeService addressTypeService;

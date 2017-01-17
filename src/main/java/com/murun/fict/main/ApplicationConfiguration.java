@@ -3,8 +3,7 @@ package com.murun.fict.main;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import org.h2.server.web.WebServlet;
 import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -23,6 +22,8 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -35,7 +36,7 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-
+@EnableResourceServer
 @EnableTransactionManagement
 @ComponentScan(basePackages="com.murun.*")
 
@@ -45,8 +46,9 @@ import java.util.Properties;
 @Configuration
 @EnableSwagger2
 @RefreshScope
-public class ApplicationConfig {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+@Import({ ResourceServerConfiguration.class })
+public class ApplicationConfiguration  {
+
 
     private static final String PROPERTY_NAME_DATABASE_DRIVER = "jdbc.driverClassName";
     private static final String PROPERTY_NAME_DATABASE_PASSWORD = "jdbc.password";
@@ -74,6 +76,7 @@ public class ApplicationConfig {
 
     @Resource
     private JedisConnectionFactory jedisConnFactory;
+
 
     @Profile("dev")
     @Bean
@@ -164,7 +167,7 @@ public class ApplicationConfig {
 
     @Bean
     public Docket api() {
-        return new Docket(DocumentationType.SPRING_WEB)
+        return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
@@ -183,7 +186,6 @@ public class ApplicationConfig {
                 "API license URL");
         return apiInfo;
     }
-
 
 
   /*  @Bean

@@ -2,14 +2,12 @@ package com.murun.fict.service;
 
 
 import com.murun.fict.TestService;
-import com.murun.fict.main.ApplicationConfig;
+import com.murun.fict.main.ApplicationConfiguration;
 import com.murun.fict.model.LegalEntity;
 import com.murun.fict.repository.LegalEntityRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Example;
@@ -30,13 +28,10 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ContextConfiguration(classes= ApplicationConfig.class)
+@ContextConfiguration(classes= ApplicationConfiguration.class)
 
 
 public class LegalEntityServiceTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(LegalEntityServiceTest.class);
-
 
     @Resource
     private LegalEntityService legalEntityService;

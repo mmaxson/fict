@@ -5,10 +5,12 @@ import com.murun.fict.model.LegalEntity;
 import com.murun.fict.service.AddressTypeService;
 import com.murun.fict.service.LegalEntityService;
 import com.murun.fict.service.LegalEntityTypeService;
+import com.wordnik.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +20,8 @@ import java.util.Optional;
 
 
 @RestController()
-@RequestMapping("/entities")
+@RequestMapping(value="/entities",  produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "LegalEntityController", description = "LegalEntityController")
 public class LegalEntityController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -33,7 +36,7 @@ public class LegalEntityController {
     private AddressTypeService addressTypeService;
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "")
     public ResponseEntity<List<LegalEntity>> getAllEntities(@RequestParam(value = "entity_type", required = false) String legalEntityTypeText) {
 
         List<LegalEntity> legalEntities;
@@ -50,7 +53,7 @@ public class LegalEntityController {
         return new ResponseEntity<List<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/id/{id}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/id/{id}")
     public ResponseEntity<LegalEntity> getEntityById(@PathVariable("id") Integer id) {
 
         if (id <= 0) {
@@ -66,7 +69,7 @@ public class LegalEntityController {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/state/{state}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/state/{state}")
     public ResponseEntity<List<LegalEntity>> getEntitiesWithAddressesInState(@PathVariable("state") String state,
                                                                              @RequestParam(value = "entity_type", required = false) String legalEntityTypeText) {
 
@@ -84,7 +87,7 @@ public class LegalEntityController {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/city/{city}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/city/{city}")
     public ResponseEntity<List<LegalEntity>> getEntitiesWithAddressesInCity(@PathVariable("city") String city,
                                                                             @RequestParam(value = "entity_type", required = false) String legalEntityTypeText) {
 
@@ -98,7 +101,7 @@ public class LegalEntityController {
         return new ResponseEntity<List<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/address-type/{addressTypeText}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/address-type/{addressTypeText}")
     public ResponseEntity<List<LegalEntity>> getEntitiesWithAddressesWithAddressType(@PathVariable("addressTypeText") String addressTypeText) {
 
         List<LegalEntity> legalEntities;

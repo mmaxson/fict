@@ -1,7 +1,7 @@
 package com.murun.fict.repository;
 
 
-import com.murun.fict.main.ApplicationConfig;
+import com.murun.fict.main.ApplicationConfiguration;
 import com.murun.fict.model.LegalEntityType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNull;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ContextConfiguration(classes= ApplicationConfig.class)
+@ContextConfiguration(classes= ApplicationConfiguration.class)
 //@DataJpaTest
 public class LegalEntityTypeRepositoryTest {
 
