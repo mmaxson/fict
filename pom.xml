@@ -5,7 +5,7 @@
 
     <groupId>com.murun</groupId>
     <artifactId>fict</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>fict</name>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.4.2.RELEASE</version>
+        <version>1.5.4.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -121,11 +121,7 @@
             <version>2.0.12.RELEASE</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.murun</groupId>
-            <artifactId>common-rest</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+
 
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
@@ -133,6 +129,11 @@
             <version>2.5.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.murun</groupId>
+            <artifactId>common-rest</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

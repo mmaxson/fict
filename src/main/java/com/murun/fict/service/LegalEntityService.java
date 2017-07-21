@@ -32,7 +32,7 @@ public class LegalEntityService {
     @Resource
     private AddressTypeService addressTypeService;
 
-    @Cacheable(value = "getAllLegalEntities")
+  //  @Cacheable(value = "getAllLegalEntities")
     public List<LegalEntity> getAllLegalEntities() {
         logger.info("getAllLegalEntities");
         return legalEntityRepository.findAll();
