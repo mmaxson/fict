@@ -1,6 +1,8 @@
 package com.murun.fict.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -12,6 +14,7 @@ public class Address implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ADDRESS_ID")
+    @JsonIgnore
     private Integer addressId;
 
     @Column(name = "STREET")

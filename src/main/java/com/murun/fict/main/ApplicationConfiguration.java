@@ -36,10 +36,11 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-@EnableResourceServer
+//@EnableResourceServer
 @EnableTransactionManagement
 @ComponentScan(basePackages="com.murun.*")
 
+//@EnableSpringDataWebSupport
 @EnableWebSecurity
 @EnableJpaRepositories("com.murun.fict.*")
 @EnableCaching

@@ -1,6 +1,7 @@
 package com.murun.fict.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,6 +15,7 @@ public class EntityAddress implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ENTITY_ADDRESS_ID")
+    @JsonIgnore
     private Integer entityAddressId;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -27,6 +29,7 @@ public class EntityAddress implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "LEGAL_ENTITY_ID", nullable = true)
     @JsonBackReference
+
     private LegalEntity legalEntity;
 
 

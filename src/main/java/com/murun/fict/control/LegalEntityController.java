@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
-
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 @RestController()
 @RequestMapping(value="/entities",  produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "LegalEntityController", description = "LegalEntityController")
+@CrossOrigin(origins = "http://localhost:4200")
 public class LegalEntityController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -37,21 +39,23 @@ public class LegalEntityController {
 
 
     @RequestMapping(method = RequestMethod.GET, value = "")
-    public ResponseEntity<List<LegalEntity>> getAllEntities(@RequestParam(value = "entity_type", required = false) String legalEntityTypeText) {
+    public ResponseEntity<Page<LegalEntity>> getAllEntities(@RequestParam(value = "entity_type", required = false) String legalEntityTypeText,
+                                                                            Pageable pageRequest) {
 
-        List<LegalEntity> legalEntities;
+        Page<LegalEntity> legalEntities;
         if (legalEntityTypeText != null) {
             if (!legalEntityTypeService.isValidLegalEntityType(legalEntityTypeText)) {
                 throw new IllegalArgumentException(legalEntityTypeText + " is not a valid entity type.");
             }
 
-            legalEntities = legalEntityService.getAllEntitiesFilterByEntityType(legalEntityTypeText);
+            legalEntities = legalEntityService.getAllEntitiesFilterByEntityType(legalEntityTypeText, pageRequest);
 
         } else {
-            legalEntities = legalEntityService.getAllLegalEntities();
+            legalEntities = legalEntityService.getAllLegalEntities(pageRequest);
         }
-        return new ResponseEntity<List<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<Page<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
     }
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/id/{id}")
     public ResponseEntity<LegalEntity> getEntityById(@PathVariable("id") Integer id) {
@@ -59,21 +63,16 @@ public class LegalEntityController {
         if (id <= 0) {
             throw new IllegalArgumentException(id + " is not a valid entity id.");
         }
-        LegalEntity legalEntity =  new LegalEntity();
-        Optional<LegalEntity> result = legalEntityService.getEntityById(id);
-        if ( result.isPresent() ) {
-            legalEntity = result.get();
-        }
-
-        return new ResponseEntity<LegalEntity>(legalEntity, new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<LegalEntity>(legalEntityService.getEntityById(id), new HttpHeaders(), HttpStatus.OK);
     }
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/state/{state}")
-    public ResponseEntity<List<LegalEntity>> getEntitiesWithAddressesInState(@PathVariable("state") String state,
-                                                                             @RequestParam(value = "entity_type", required = false) String legalEntityTypeText) {
-
-        List<LegalEntity> legalEntities;
+    public ResponseEntity<Page<LegalEntity>> getEntitiesWithAddressesInState(@PathVariable("state") String state,
+                                                                             @RequestParam(value = "entity_type", required = false) String legalEntityTypeText,
+                                                                             Pageable pageRequest ) {
+        // TODO fix
+        Page<LegalEntity> legalEntities;
         if (legalEntityTypeText != null) {
             if (!legalEntityTypeService.isValidLegalEntityType(legalEntityTypeText)) {
                 throw new IllegalArgumentException(legalEntityTypeText + " is not a valid entity type.");
@@ -81,38 +80,40 @@ public class LegalEntityController {
 
         }
 
-        legalEntities = legalEntityService.getEntitiesWithAddressesInState(state);
+        legalEntities = legalEntityService.getEntitiesWithAddressesInState(state, pageRequest);
 
-        return new ResponseEntity<List<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<Page<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
     }
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/city/{city}")
-    public ResponseEntity<List<LegalEntity>> getEntitiesWithAddressesInCity(@PathVariable("city") String city,
-                                                                            @RequestParam(value = "entity_type", required = false) String legalEntityTypeText) {
-
-        List<LegalEntity> legalEntities;
+    public ResponseEntity<Page<LegalEntity>> getEntitiesWithAddressesInCity(@PathVariable("city") String city,
+                                                                            @RequestParam(value = "entity_type", required = false) String legalEntityTypeText,
+                                                                            Pageable pageRequest) {
+        // TODO fix
+        Page<LegalEntity> legalEntities;
         if (legalEntityTypeText != null) {
             if (!legalEntityTypeService.isValidLegalEntityType(legalEntityTypeText)) {
                 throw new IllegalArgumentException(legalEntityTypeText + " is not a valid entity type.");
             }
         }
-        legalEntities = legalEntityService.getEntitiesWithAddressesInCity(city);
-        return new ResponseEntity<List<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
+        legalEntities = legalEntityService.getEntitiesWithAddressesInCity(city, pageRequest);
+        return new ResponseEntity<Page<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/address-type/{addressTypeText}")
-    public ResponseEntity<List<LegalEntity>> getEntitiesWithAddressesWithAddressType(@PathVariable("addressTypeText") String addressTypeText) {
+    public ResponseEntity<Page<LegalEntity>> getEntitiesWithAddressesWithAddressType(@PathVariable("addressTypeText") String addressTypeText,
+                                                                                     Pageable pageRequest) {
 
-        List<LegalEntity> legalEntities;
+        Page<LegalEntity> legalEntities;
 
         if (!addressTypeService.isValidAddressType(addressTypeText)) {
             throw new IllegalArgumentException(addressTypeText + " is not a valid address type.");
         }
 
-        legalEntities = legalEntityService.getAllEntitiesWithAddressesWithAddressType(addressTypeText);
+        legalEntities = legalEntityService.getAllEntitiesWithAddressesWithAddressType(addressTypeText, pageRequest);
 
 
-        return new ResponseEntity<List<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<Page<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
     }
 }

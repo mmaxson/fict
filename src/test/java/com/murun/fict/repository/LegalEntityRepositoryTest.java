@@ -146,10 +146,10 @@ public class LegalEntityRepositoryTest {
 
         setEntityAddresses();
 
-        assertEquals(1, legalEntityRepository.getEntitiesWithAddressesInState("TX").size());
-        assertEquals(1, legalEntityRepository.getEntitiesWithAddressesInState("AZ").size());
-        assertEquals(1, legalEntityRepository.getEntitiesWithAddressesInState("ca").size());
-        assertEquals(0, legalEntityRepository.getEntitiesWithAddressesInState("NY").size());
+        assertEquals(1, legalEntityRepository.getEntitiesWithAddressesInState("TX", null).getTotalElements());
+        assertEquals(1, legalEntityRepository.getEntitiesWithAddressesInState("AZ", null).getTotalElements());
+        assertEquals(1, legalEntityRepository.getEntitiesWithAddressesInState("ca", null).getTotalElements());
+        assertEquals(0, legalEntityRepository.getEntitiesWithAddressesInState("NY", null).getTotalElements());
     }
 
     @Test
@@ -161,10 +161,10 @@ public class LegalEntityRepositoryTest {
 
         List<LegalEntity> legalEntityList = legalEntityRepository.findAll();
 
-        assertEquals(1, legalEntityRepository.getEntitiesWithAddressesInCity("santa monica").size());
-        assertEquals(1, legalEntityRepository.getEntitiesWithAddressesInCity("Westwood").size());
-        assertEquals(1, legalEntityRepository.getEntitiesWithAddressesInCity("Phoenix").size());
-        assertEquals(0, legalEntityRepository.getEntitiesWithAddressesInCity("Nowhere").size());
+        assertEquals(1, legalEntityRepository.getEntitiesWithAddressesInCity("santa monica", null).getTotalElements());
+        assertEquals(1, legalEntityRepository.getEntitiesWithAddressesInCity("Westwood", null).getTotalElements());
+        assertEquals(1, legalEntityRepository.getEntitiesWithAddressesInCity("Phoenix", null).getTotalElements());
+        assertEquals(0, legalEntityRepository.getEntitiesWithAddressesInCity("Nowhere", null).getTotalElements());
     }
 
 

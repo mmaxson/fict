@@ -42,3 +42,4 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         return tokenServices;
     }
 }
+

@@ -6,6 +6,9 @@ import com.murun.fict.repository.LegalEntityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +16,8 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 import static java.util.stream.Collectors.toList;
 
@@ -33,70 +38,40 @@ public class LegalEntityService {
     private AddressTypeService addressTypeService;
 
   //  @Cacheable(value = "getAllLegalEntities")
-    public List<LegalEntity> getAllLegalEntities() {
-        logger.info("getAllLegalEntities");
-        return legalEntityRepository.findAll();
+    public Page<LegalEntity> getAllLegalEntities(Pageable pageRequest) {
+        logger.info("getAllLegalEntities  pageable");
+        return legalEntityRepository.findAll(pageRequest);
     }
 
-    public List<LegalEntity> getAllEntitiesFilterByEntityType(String onlyLegalEntityTypeText) {
+    public Page<LegalEntity> getAllEntitiesFilterByEntityType(String onlyLegalEntityTypeText, Pageable pageRequest) {
         logger.info("getAllEntitiesFilterByEntityType");
-
         Integer legalEntityTypeId = legalEntityTypeService.getLegalEntityTypeId(onlyLegalEntityTypeText);
-        return getAllLegalEntities().stream().filter(x -> x.getLegalEntityType().getLegalEntityTypeId().equals(legalEntityTypeId)).collect(toList());
+        return legalEntityRepository.getAllEntitiesFilterByEntityType(legalEntityTypeId, pageRequest);
     }
 
-    public Optional<LegalEntity> getEntityById(int legalEntityId) {
+    public LegalEntity getEntityById(int legalEntityId) {
         logger.info("getEntityById");
-
-        return getAllLegalEntities().stream().filter(x->x.getLegalEntityId().equals(legalEntityId)).findFirst();
+        return legalEntityRepository.getOne(legalEntityId);
     }
 
-    public List<LegalEntity> getEntitiesWithAddressesInState(String state) {
+    public Page<LegalEntity> getEntitiesWithAddressesInState(String state, Pageable pageRequest) {
         logger.info("getEntitiesWithAddressesInState");
-
-        List<LegalEntity> retVal = new ArrayList<>();
-        for (LegalEntity legalEntity : getAllLegalEntities()) {
-
-            Optional<EntityAddress> entityAddress = legalEntity.getEntityAddresses().stream().filter(y -> y.getAddress().getState().equals(state)).findFirst();
-            if (entityAddress.isPresent()) {
-                retVal.add(legalEntity);
-            }
-        }
-
-        return retVal;
+        return legalEntityRepository.getEntitiesWithAddressesInState(state, pageRequest);
     }
 
 
-    public List<LegalEntity> getEntitiesWithAddressesInCity(String city) {
+    public Page<LegalEntity> getEntitiesWithAddressesInCity(String city, Pageable pageRequest) {
         logger.info("getEntitiesWithAddressesInCity");
-
-        List<LegalEntity> retVal = new ArrayList<>();
-        for (LegalEntity legalEntity : getAllLegalEntities()) {
-
-            Optional<EntityAddress> entityAddress = legalEntity.getEntityAddresses().stream().filter(y -> y.getAddress().getCity().equals(city)).findFirst();
-            if (entityAddress.isPresent()) {
-                retVal.add(legalEntity);
-            }
-        }
-
-        return retVal;
+        return legalEntityRepository.getEntitiesWithAddressesInCity(city, pageRequest);
     }
 
 
-    public List<LegalEntity> getAllEntitiesWithAddressesWithAddressType(String onlyAddressTypeText) {
+    public Page<LegalEntity> getAllEntitiesWithAddressesWithAddressType(String onlyAddressTypeText, Pageable pageRequest) {
         logger.info("getAllEntitiesWithAddressesWithAddressType");
 
         Integer addressTypeId = addressTypeService.getAddressTypeId(onlyAddressTypeText);
+        return legalEntityRepository.getEntitiesWithAddressTypeId(addressTypeId, pageRequest);
 
-        List<LegalEntity> retVal = new ArrayList<>();
-        for (LegalEntity legalEntity : getAllLegalEntities()) {
-            Optional<EntityAddress> entityAddress = legalEntity.getEntityAddresses().stream().filter(y -> y.getAddressType().getAddressTypeId().equals(addressTypeId)).findFirst();
-            if (entityAddress.isPresent()) {
-                retVal.add(legalEntity);
-            }
-        }
-
-        return retVal;
     }
 
 

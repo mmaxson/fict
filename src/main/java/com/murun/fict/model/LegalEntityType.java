@@ -14,7 +14,7 @@ public class LegalEntityType implements Serializable {
 
     @Id
     @Column(name = "LEGAL_ENTITY_TYPE_ID")
-   // @JsonIgnore
+    @JsonIgnore
     private Integer legalEntityTypeId;
 
     @Column(name = "LEGAL_ENTITY_TYPE_TEXT")

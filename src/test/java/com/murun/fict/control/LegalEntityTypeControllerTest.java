@@ -18,6 +18,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -38,8 +40,6 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Page;
 
 
 @ActiveProfiles("test")
@@ -50,7 +50,7 @@ import org.springframework.data.domain.Page;
 
 @AutoConfigureWebMvc
 @AutoConfigureMockMvc
-public class LegalEntityControllerTest {
+public class LegalEntityTypeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -128,12 +128,12 @@ public class LegalEntityControllerTest {
     @Test
     public void shouldReturnCorporationsOnly() throws Exception {
 
-        Page<LegalEntity> legalEntityList = new PageImpl(new ArrayList<LegalEntity>());
 
+        Page<LegalEntity> legalEntityList = new PageImpl(new ArrayList<LegalEntity>());
         legalEntityList.getContent().add(TestService.createCorporateLegalEntity());
 
-        given(legalEntityTypeService.isValidLegalEntityType("Corporation")).willReturn(true);
 
+        given(legalEntityTypeService.isValidLegalEntityType("Corporation")).willReturn(true);
         given(legalEntityService.getAllEntitiesFilterByEntityType("Corporation", null)).willReturn(legalEntityList);
 
         mockMvc.perform( get("/entities?entity_type=Corporation")
@@ -162,7 +162,7 @@ public class LegalEntityControllerTest {
     @Test
     public void shouldGetByCity() throws Exception {
 
-        Page<LegalEntity> legalEntityList = new PageImpl( new ArrayList<>());
+        Page<LegalEntity> legalEntityList = new PageImpl(new ArrayList<>());
         legalEntityList.getContent().add(TestService.createCorporateLegalEntity());
         legalEntityList.getContent().add(TestService.createIndividualLegalEntity());
 
@@ -182,7 +182,7 @@ public class LegalEntityControllerTest {
     @Test
     public void shouldGetByState() throws Exception {
 
-        Page<LegalEntity> legalEntityList = new PageImpl(new ArrayList<LegalEntity>());
+        Page<LegalEntity> legalEntityList = new PageImpl(new ArrayList<>());
         legalEntityList.getContent().add(TestService.createCorporateLegalEntity());
         legalEntityList.getContent().add(TestService.createIndividualLegalEntity());
 
@@ -191,7 +191,7 @@ public class LegalEntityControllerTest {
         legalEntityList.getContent().get(0).getEntityAddresses().add((createMailingAddrForLegalEntity(legalEntityList.getContent().get(0), "Westwood", "AZ", "90402")));
 
 
-        given(legalEntityService.getEntitiesWithAddressesInState("CA", null )).willReturn(legalEntityList);
+        given(legalEntityService.getEntitiesWithAddressesInState("CA", null)).willReturn(legalEntityList);
 
         mockMvc.perform( get("/entities/state/CA")
                 .param("access_token", "token"))
@@ -202,7 +202,7 @@ public class LegalEntityControllerTest {
     @Test
     public void shouldGetByEntityType() throws Exception {
 
-        Page<LegalEntity> legalEntityList = new PageImpl(new ArrayList<>());
+        Page<LegalEntity> legalEntityList = new PageImpl( new ArrayList<>());
         legalEntityList.getContent().add(TestService.createCorporateLegalEntity());
         legalEntityList.getContent().add(TestService.createIndividualLegalEntity());
 

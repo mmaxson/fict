@@ -16,9 +16,10 @@ public class NameType implements Serializable {
 
     @Id
     @Column(name = "NAME_TYPE_ID")
+    @JsonIgnore
     private Integer nameTypeId;
 
-    @JsonProperty("name type")
+ //   @JsonProperty("name type")
     @Column(name = "NAME_TYPE_TEXT")
     private String nameTypeText;
 

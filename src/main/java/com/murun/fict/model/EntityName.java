@@ -13,7 +13,7 @@ public class EntityName implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ENTITY_NAME_ID")
-  //  @JsonIgnore
+    @JsonIgnore
     private Integer entityNameId;
 
     @OneToOne(fetch = FetchType.EAGER)

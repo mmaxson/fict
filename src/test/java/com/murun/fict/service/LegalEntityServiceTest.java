@@ -69,7 +69,7 @@ public class LegalEntityServiceTest {
 
     @Test
     public void shouldGetAllLegalEntities() throws Exception {
-        assertEquals(3, legalEntityService.getAllLegalEntities().size());
+        assertEquals(3, legalEntityService.getAllLegalEntities(null).getTotalElements());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class LegalEntityServiceTest {
     public void shouldFilterByEntityType() throws Exception {
         when(legalEntityTypeService.getLegalEntityTypeId(LegalEntityTypeTestEnum.CORPORATION.entityTypeText())).thenReturn(LegalEntityTypeTestEnum.CORPORATION.entityTypeId());
 
-        assertEquals(1, legalEntityService.getAllEntitiesFilterByEntityType(LegalEntityTypeTestEnum.CORPORATION.entityTypeText()).size());
+        assertEquals(1, legalEntityService.getAllEntitiesFilterByEntityType(LegalEntityTypeTestEnum.CORPORATION.entityTypeText(), null).getTotalElements());
     }
 
 
@@ -103,7 +103,7 @@ public class LegalEntityServiceTest {
         legalEntityListLocal.get(1).getEntityAddresses().add((createResidenceAddrForLegalEntity(legalEntityListLocal.get(1), "Phoenix", "AZ", "90402")));
 
         when(legalEntityRepository.findAll()).thenReturn(legalEntityListLocal);
-        assertEquals(2, legalEntityService.getEntitiesWithAddressesInState("AZ").size());
+        assertEquals(2, legalEntityService.getEntitiesWithAddressesInState("AZ", null).getTotalElements());
     }
 
 
@@ -121,7 +121,7 @@ public class LegalEntityServiceTest {
         legalEntityListLocal.get(1).getEntityAddresses().add((createResidenceAddrForLegalEntity(legalEntityListLocal.get(1), "Phoenix", "AZ", "90402")));
 
         when(legalEntityRepository.findAll()).thenReturn(legalEntityListLocal);
-        assertEquals(1, legalEntityService.getEntitiesWithAddressesInCity("Santa Monica").size());
+        assertEquals(1, legalEntityService.getEntitiesWithAddressesInCity("Santa Monica", null).getTotalElements());
     }
 
 
@@ -141,6 +141,6 @@ public class LegalEntityServiceTest {
         when(addressTypeService.getAddressTypeId("Residence")).thenReturn( TestService.AddressTypeTestEnum.RESIDENCE.addressTypeId() );
 
         when(legalEntityRepository.findAll()).thenReturn(legalEntityListLocal);
-        assertEquals(1, legalEntityService.getAllEntitiesWithAddressesWithAddressType("Residence").size());
+        assertEquals(1, legalEntityService.getAllEntitiesWithAddressesWithAddressType("Residence", null).getTotalElements());
     }
 }
