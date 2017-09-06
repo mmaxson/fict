@@ -16,7 +16,7 @@ public class LegalEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "LEGAL_ENTITY_ID")
-    @JsonIgnore
+    //@JsonIgnore
     private Integer legalEntityId;
 
     @OneToOne(fetch = FetchType.EAGER)

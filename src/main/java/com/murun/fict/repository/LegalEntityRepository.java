@@ -14,7 +14,7 @@ public interface LegalEntityRepository extends JpaRepository<LegalEntity, Intege
     @Query("select legalEntity from LegalEntity as legalEntity where legalEntity.legalEntityType.legalEntityTypeId = :legalEntityTypeId")
     Page<LegalEntity> getAllEntitiesFilterByEntityType(@Param("legalEntityTypeId") Integer legalEntityTypeId, Pageable page);
 
-    // TODO fix
+   /* // TODO fix
     @Query("select legalEntity from LegalEntity as legalEntity where upper(legalEntity.entityAddresses.address.state) = upper(:state)")
     Page<LegalEntity> getEntitiesWithAddressesInState(@Param("state") String state, Pageable page);
 
@@ -22,9 +22,9 @@ public interface LegalEntityRepository extends JpaRepository<LegalEntity, Intege
     @Query("select legalEntity from LegalEntity as legalEntity where lower(legalEntity.entityAddresses.address.city) = lower(:city)")
     Page<LegalEntity> getEntitiesWithAddressesInCity(@Param("city") String city, Pageable page);
 
-    @Query("select legalEntity from LegalEntity as legalEntity where addressType.addressTypeId = :addressTypeId")
+    @Query("select legalEntity from LegalEntity as legalEntity where legalEntity.addressType.addressTypeId = :addressTypeId")
     Page<LegalEntity> getEntitiesWithAddressTypeId(@Param("addressTypeId") Integer addressTypeId, Pageable page );
-
+*/
 }
 
 
