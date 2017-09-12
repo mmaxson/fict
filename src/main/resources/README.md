@@ -1,7 +1,7 @@
 
 
 #Build:
-    mvn flyway:migrate    (mvn flyway:repair after a failure)
+    mvn flyway:migrate    (mvn flyway:repair after a failure; mvn flyway:clean to run all scripts from start)
 
     mvn clean package docker:build
     docker build -t marku/fict target/docker
@@ -19,7 +19,7 @@
         with basic authentication (Client id in auth.oauth_client_details;)
 
 - To get a refresh token, POST localhost:7771/murun/auth/oauth/token?grant_type=refresh_token&refresh_token=xxxxxx
-
+m
 
   ##Shell Run:
 

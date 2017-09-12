@@ -15,7 +15,7 @@ public class EntityAddress implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ENTITY_ADDRESS_ID")
-    @JsonIgnore
+    //@JsonIgnore
     private Integer entityAddressId;
 
     @OneToOne(fetch = FetchType.EAGER)
