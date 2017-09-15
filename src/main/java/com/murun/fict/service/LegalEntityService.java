@@ -36,7 +36,7 @@ public class LegalEntityService {
     }
 
     public Page<LegalEntity> getAllEntitiesFilterByEntityType(String onlyLegalEntityTypeText, Pageable pageRequest) {
-        logger.info("getAddressesByEntityId: " + pageRequest.getPageNumber() + ' ' + pageRequest.getPageSize());
+        logger.info("getEntityAddressesByEntityId: " + pageRequest.getPageNumber() + ' ' + pageRequest.getPageSize());
         Integer legalEntityTypeId = legalEntityTypeService.getLegalEntityTypeId(onlyLegalEntityTypeText);
         return legalEntityRepository.getAllEntitiesFilterByEntityType(legalEntityTypeId, pageRequest);
     }

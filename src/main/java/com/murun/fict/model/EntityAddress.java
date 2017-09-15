@@ -2,9 +2,11 @@ package com.murun.fict.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.murun.fict.dto.EntityAddressDTO;
 
 import javax.persistence.*;
 import java.io.Serializable;
+// import org.hibernate.annotations.Cascade;
 
 
 @Entity
@@ -18,22 +20,32 @@ public class EntityAddress implements Serializable {
     //@JsonIgnore
     private Integer entityAddressId;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "ADDRESS_TYPE_ID", nullable = false)
     private AddressType addressType;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "ADDRESS_ID", nullable = true)
     private Address address ;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "LEGAL_ENTITY_ID", nullable = true)
+    @JoinColumn(name = "LEGAL_ENTITY_ID", nullable = false)
     @JsonBackReference
-
     private LegalEntity legalEntity;
 
 
     public EntityAddress() {
+    }
+
+    public static EntityAddress createEntityAddress(EntityAddressDTO entityAddressDTO, AddressType addressType){
+        EntityAddress retVal = new EntityAddress();
+        retVal.setEntityAddressId( entityAddressDTO.getEntityAddressId());
+        retVal.setAddressType(addressType);
+        retVal.setAddress(entityAddressDTO.getAddress());
+        LegalEntity legalEntity = new LegalEntity();
+        legalEntity.setLegalEntityId(entityAddressDTO.getLegalEntityId());
+        retVal.setLegalEntity(legalEntity);
+        return retVal;
     }
 
     public Integer getEntityAddressId() {
@@ -85,16 +97,24 @@ public class EntityAddress implements Serializable {
             return false;
         if (getAddress() != null ? !getAddress().equals(that.getAddress()) : that.getAddress() != null) return false;
         return getLegalEntity() != null ? getLegalEntity().equals(that.getLegalEntity()) : that.getLegalEntity() == null;
-
     }
 
     @Override
     public int hashCode() {
-        int result = getEntityAddressId() != null ? getEntityAddressId().hashCode() : 0;
-        result = 31 * result + (getAddressType() != null ? getAddressType().hashCode() : 0);
+        int result = getAddressType() != null ? getAddressType().hashCode() : 0;
         result = 31 * result + (getAddress() != null ? getAddress().hashCode() : 0);
         result = 31 * result + (getLegalEntity() != null ? getLegalEntity().hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "EntityAddress{" +
+                "entityAddressId=" + entityAddressId +
+                ", addressType=" + addressType +
+                ", address=" + address +
+                ", legalEntity=" + legalEntity +
+                '}';
     }
 }
 

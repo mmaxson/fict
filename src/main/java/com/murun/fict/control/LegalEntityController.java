@@ -23,7 +23,7 @@ import org.springframework.data.domain.Page;
 @RestController()
 @RequestMapping(value="/entities",  produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "LegalEntityController", description = "LegalEntityController")
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 public class LegalEntityController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -116,4 +116,6 @@ public class LegalEntityController {
 
         return new ResponseEntity<Page<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
     }
+
+
 }

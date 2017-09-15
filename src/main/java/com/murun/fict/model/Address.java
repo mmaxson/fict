@@ -14,7 +14,6 @@ public class Address implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ADDRESS_ID")
-    @JsonIgnore
     private Integer addressId;
 
     @Column(name = "STREET")
@@ -88,5 +87,27 @@ public class Address implements Serializable {
                 ", state='" + state + '\'' +
                 ", zipCode='" + zipCode + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Address address = (Address) o;
+
+        if (getStreet() != null ? !getStreet().equals(address.getStreet()) : address.getStreet() != null) return false;
+        if (getCity() != null ? !getCity().equals(address.getCity()) : address.getCity() != null) return false;
+        if (getState() != null ? !getState().equals(address.getState()) : address.getState() != null) return false;
+        return getZipCode() != null ? getZipCode().equals(address.getZipCode()) : address.getZipCode() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getStreet() != null ? getStreet().hashCode() : 0;
+        result = 31 * result + (getCity() != null ? getCity().hashCode() : 0);
+        result = 31 * result + (getState() != null ? getState().hashCode() : 0);
+        result = 31 * result + (getZipCode() != null ? getZipCode().hashCode() : 0);
+        return result;
     }
 }

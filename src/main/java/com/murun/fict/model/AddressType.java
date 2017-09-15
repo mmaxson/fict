@@ -1,6 +1,8 @@
 package com.murun.fict.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -14,9 +16,9 @@ public class AddressType implements Serializable {
 
     @Id
     @Column(name = "ADDRESS_TYPE_ID")
-    @JsonIgnore
     private Integer addressTypeId;
 
+    @JsonIgnore
     @Column(name = "ADDRESS_TYPE_TEXT")
     private String addressTypeText;
 
@@ -43,5 +45,28 @@ public class AddressType implements Serializable {
 
     public void setAddressTypeText(String addressTypeText) {
         this.addressTypeText = addressTypeText;
+    }
+
+    @Override
+    public String toString() {
+        return "AddressType{" +
+                "addressTypeId=" + addressTypeId +
+                ", addressTypeText='" + addressTypeText + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AddressType that = (AddressType) o;
+
+        return getAddressTypeText().equals(that.getAddressTypeText());
+    }
+
+    @Override
+    public int hashCode() {
+        return getAddressTypeText().hashCode();
     }
 }

@@ -1,5 +1,6 @@
 package com.murun.fict.service;
 
+import com.murun.fict.dto.EntityAddressDTO;
 import com.murun.fict.model.EntityAddress;
 import com.murun.fict.repository.EntityAddressRepository;
 import org.slf4j.Logger;
@@ -21,10 +22,17 @@ public class EntityAddressService {
     @Resource
     EntityAddressRepository entityAddressRepository;
 
-    public Page<EntityAddress> getAddressesByEntityId(Integer legalEntityId, Pageable pageRequest) {
-        logger.info("getAddressesByEntityId: " + pageRequest.getPageNumber() + ' ' + pageRequest.getPageSize());
+    @Resource
+    AddressTypeService addressTypeService;
+
+    public Page<EntityAddress> getEntityAddressesByEntityId(Integer legalEntityId, Pageable pageRequest) {
+        logger.info("getEntityAddressesByEntityId: " + pageRequest.getPageNumber() + ' ' + pageRequest.getPageSize());
         return entityAddressRepository.getAddressesByEntityId(legalEntityId, pageRequest);
     }
 
-
+    public void saveEntityAddress(EntityAddressDTO entityAddressDTO){
+        EntityAddress entityAddress = EntityAddress.createEntityAddress(entityAddressDTO, addressTypeService.createAddressTypeById(entityAddressDTO.getAddressTypeId()));
+        logger.info("saveEntityAddress: " +  entityAddress);
+        entityAddressRepository.saveAndFlush(entityAddress);
+    }
 }

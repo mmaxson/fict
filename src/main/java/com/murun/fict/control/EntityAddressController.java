@@ -1,7 +1,10 @@
 package com.murun.fict.control;
 
 
+import com.murun.commonrest.model.SuccessResource;
+import com.murun.fict.model.AddressType;
 import com.murun.fict.model.EntityAddress;
+import com.murun.fict.dto.EntityAddressDTO;
 import com.murun.fict.service.EntityAddressService;
 import com.wordnik.swagger.annotations.Api;
 import org.slf4j.Logger;
@@ -19,7 +22,6 @@ import javax.annotation.Resource;
 @RestController()
 @RequestMapping(value="/addresses",  produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "EntityAddressController", description = "EntityAddressController")
-@CrossOrigin(origins = "http://localhost:4200")
 public class EntityAddressController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -34,12 +36,17 @@ public class EntityAddressController {
             throw new IllegalArgumentException(id + " is not a valid entity id.");
         }
 
-        Page<EntityAddress> legalEntities = entityAddressService.getAddressesByEntityId(id, pageRequest);
+        Page<EntityAddress> legalEntities = entityAddressService.getEntityAddressesByEntityId(id, pageRequest);
         return new ResponseEntity<Page<EntityAddress>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
     }
 
 
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity<SuccessResource> updateEntityAddressById(@RequestBody EntityAddressDTO dto) {
+        entityAddressService.saveEntityAddress(dto);
+        return new ResponseEntity<SuccessResource>(new SuccessResource("0", "Success"), new HttpHeaders(), HttpStatus.OK );
 
+    }
 
 
 }

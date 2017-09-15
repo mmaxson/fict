@@ -31,6 +31,9 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -188,7 +191,15 @@ public class ApplicationConfiguration  {
         return apiInfo;
     }
 
-
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("http://localhost:4200").allowedMethods("*");
+            }
+        };
+    }
   /*  @Bean
     public String kmsEndPoint() {
         return env.getProperty(PROPERTY_NAME_KMS_ENDPOINT);

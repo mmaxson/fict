@@ -22,7 +22,6 @@ import java.util.List;
 @RestController()
 @RequestMapping(value="/entity-types",  produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "LegalEntityTypeController", description = "LegalEntityTypeController")
-@CrossOrigin(origins = "http://localhost:4200")
 public class LegalEntityTypeController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

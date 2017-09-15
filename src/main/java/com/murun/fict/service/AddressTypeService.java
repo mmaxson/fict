@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
+import com.murun.fict.model.AddressType;
 
 
 @Service
@@ -23,10 +24,12 @@ public class AddressTypeService {
 
 
     private Map<String, Integer> addressTypeReverseLookup = new HashMap<>();
+    private Map<Integer, String> addressTypes = new HashMap<>();
 
     @PostConstruct
     protected void initialize(){
         addressTypeRepository.findAll().forEach( x -> addressTypeReverseLookup.put(x.getAddressTypeText().toLowerCase(), x.getAddressTypeId()));
+        addressTypeRepository.findAll().forEach( x -> addressTypes.put(x.getAddressTypeId(),x.getAddressTypeText()));
     }
 
 
@@ -39,4 +42,11 @@ public class AddressTypeService {
         return addressTypeReverseLookup.get(addressTypeText.toLowerCase());
     }
 
+    public String getAddressTypeText(Integer addressTypeId){
+        return addressTypes.get(addressTypeId);
+    }
+
+    public AddressType createAddressTypeById ( Integer addressTypeId ){
+        return new AddressType( addressTypeId, getAddressTypeText(addressTypeId));
+    }
 }
