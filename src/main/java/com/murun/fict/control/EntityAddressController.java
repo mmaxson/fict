@@ -2,7 +2,6 @@ package com.murun.fict.control;
 
 
 import com.murun.commonrest.model.SuccessResource;
-import com.murun.fict.model.AddressType;
 import com.murun.fict.model.EntityAddress;
 import com.murun.fict.dto.EntityAddressDTO;
 import com.murun.fict.service.EntityAddressService;
@@ -42,11 +41,20 @@ public class EntityAddressController {
 
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<SuccessResource> updateEntityAddressById(@RequestBody EntityAddressDTO dto) {
+    public ResponseEntity<SuccessResource> updateEntityAddress(@RequestBody EntityAddressDTO dto) {
         entityAddressService.saveEntityAddress(dto);
-        return new ResponseEntity<SuccessResource>(new SuccessResource("0", "Success"), new HttpHeaders(), HttpStatus.OK );
-
+        return new ResponseEntity<SuccessResource>(new SuccessResource("0", "Successfully saved."), new HttpHeaders(), HttpStatus.OK );
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<SuccessResource> addEntityAddress(@RequestBody EntityAddressDTO dto) {
+        entityAddressService.saveEntityAddress(dto);
+        return new ResponseEntity<SuccessResource>(new SuccessResource("0", "Successfully created."), new HttpHeaders(), HttpStatus.OK );
+    }
 
+    @RequestMapping(method = RequestMethod.DELETE, value = "/id/{id}")
+    public ResponseEntity<SuccessResource> deleteEntityAddress(@PathVariable("id") Integer id) {
+        Integer retVal = entityAddressService.deleteEntityAddressById(id);
+        return new ResponseEntity<SuccessResource>(new SuccessResource( retVal.toString(), "Successfully deleted."), new HttpHeaders(), HttpStatus.OK );
+    }
 }

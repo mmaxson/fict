@@ -35,4 +35,11 @@ public class EntityAddressService {
         logger.info("saveEntityAddress: " +  entityAddress);
         entityAddressRepository.saveAndFlush(entityAddress);
     }
+
+    public Integer deleteEntityAddressById(Integer id){
+        logger.info("deleteEntityAddressById: " +  id);
+
+        return entityAddressRepository.deleteEntityAddressesByEntityAddressId(id);
+    }
+
 }

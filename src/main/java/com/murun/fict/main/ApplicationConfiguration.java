@@ -39,7 +39,7 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-//@EnableResourceServer
+@EnableResourceServer
 @EnableTransactionManagement
 @ComponentScan(basePackages="com.murun.*")
 
@@ -191,15 +191,20 @@ public class ApplicationConfiguration  {
         return apiInfo;
     }
 
-    @Bean
+    /*@Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:4200").allowedMethods("*");
+                registry.addMapping("/**").allowedOrigins("http://localhost:4200").allowedMethods("*").allowedHeaders("*")
+                                                     .allowedOrigins("http://localhost:7771").allowedMethods("*").allowedHeaders("*");
             }
         };
-    }
+    }*/
+
+
+
+
   /*  @Bean
     public String kmsEndPoint() {
         return env.getProperty(PROPERTY_NAME_KMS_ENDPOINT);

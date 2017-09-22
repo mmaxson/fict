@@ -19,8 +19,9 @@
         with basic authentication (Client id in auth.oauth_client_details;)
 
 - To get a refresh token, POST localhost:7771/murun/auth/oauth/token?grant_type=refresh_token&refresh_token=xxxxxx
-m
 
+  ####Example:
+        localhost:8080/murun/fict/entities?access_token=c89372cc-1718-4e47-9850-b0b8867d8f21&entity_type=Corporation
   ##Shell Run:
 
     Env vars:

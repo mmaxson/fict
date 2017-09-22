@@ -36,7 +36,7 @@ public class LegalEntityService {
     }
 
     public Page<LegalEntity> getAllEntitiesFilterByEntityType(String onlyLegalEntityTypeText, Pageable pageRequest) {
-        logger.info("getEntityAddressesByEntityId: " + pageRequest.getPageNumber() + ' ' + pageRequest.getPageSize());
+        logger.info("getAllEntitiesFilterByEntityType: " + pageRequest.getPageNumber() + ' ' + pageRequest.getPageSize());
         Integer legalEntityTypeId = legalEntityTypeService.getLegalEntityTypeId(onlyLegalEntityTypeText);
         return legalEntityRepository.getAllEntitiesFilterByEntityType(legalEntityTypeId, pageRequest);
     }
@@ -49,14 +49,12 @@ public class LegalEntityService {
     public Page<LegalEntity> getEntitiesWithAddressesInState(String state, Pageable pageRequest) {
         logger.info("getEntitiesWithAddressesInState");
         return new PageImpl( new ArrayList<LegalEntity>());
-      //  return legalEntityRepository.getEntitiesWithAddressesInState(state, pageRequest);
     }
 
 
     public Page<LegalEntity> getEntitiesWithAddressesInCity(String city, Pageable pageRequest) {
         logger.info("getEntitiesWithAddressesInCity");
         return new PageImpl( new ArrayList<LegalEntity>());
-       // return legalEntityRepository.getEntitiesWithAddressesInCity(city, pageRequest);
     }
 
 
@@ -65,8 +63,6 @@ public class LegalEntityService {
 
         Integer addressTypeId = addressTypeService.getAddressTypeId(onlyAddressTypeText);
         return new PageImpl( new ArrayList<LegalEntity>());
-
-       // return legalEntityRepository.getEntitiesWithAddressTypeId(addressTypeId, pageRequest);
 
     }
 
