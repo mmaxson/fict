@@ -23,8 +23,8 @@ public class AddressTypeService {
     AddressTypeRepository addressTypeRepository;
 
 
-    private Map<String, Integer> addressTypeReverseLookup = new HashMap<>();
-    private Map<Integer, String> addressTypes = new HashMap<>();
+    private final Map<String, Integer> addressTypeReverseLookup = new HashMap<>();
+    private final Map<Integer, String> addressTypes = new HashMap<>();
 
     @PostConstruct
     protected void initialize(){

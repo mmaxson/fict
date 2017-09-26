@@ -2,7 +2,6 @@ package com.murun.fict.repository;
 
 
 import com.murun.fict.main.ApplicationConfiguration;
-import com.murun.fict.model.Address;
 import com.murun.fict.model.EntityAddress;
 import com.murun.fict.model.LegalEntity;
 import org.junit.After;

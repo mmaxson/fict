@@ -94,7 +94,7 @@ public class LegalEntityRepositoryTest {
     @Test
     public void verifyCount() {
         legalEntityRepository.save(legalEntity);
-        assertEquals(legalEntityRepository.count(), legalEntityRepository.findAll().stream().count());
+        assertEquals(legalEntityRepository.count(), legalEntityRepository.findAll().size());
     }
 
     private void setEntityAddresses() {

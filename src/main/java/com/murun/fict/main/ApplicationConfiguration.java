@@ -1,9 +1,7 @@
 package com.murun.fict.main;
 
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
-//import org.h2.server.web.WebServlet;
 import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -33,6 +31,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Properties;
+
+//import org.h2.server.web.WebServlet;
 
 @EnableResourceServer
 @EnableTransactionManagement
@@ -145,13 +145,12 @@ public class ApplicationConfiguration  {
 
     @Bean
     public StringRedisSerializer stringRedisSerializer() {
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-        return stringRedisSerializer;
+        return new StringRedisSerializer();
     }
 
     @Bean
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory cf) {
-        RedisTemplate<String, String> redisTemplate = new RedisTemplate<String, String>();
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(cf);
         return redisTemplate;
     }
@@ -175,7 +174,7 @@ public class ApplicationConfiguration  {
     }
 
     private ApiInfo apiInfo() {
-        ApiInfo apiInfo = new ApiInfo(
+        return new ApiInfo(
                 "entity",
                 "Entity API",
                 "1.0",
@@ -183,7 +182,7 @@ public class ApplicationConfiguration  {
                 "mmurun@gmail.com",
                 "License of API",
                 "API license URL");
-        return apiInfo;
+
     }
 
   /*  @Bean

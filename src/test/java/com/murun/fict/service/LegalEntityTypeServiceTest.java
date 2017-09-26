@@ -40,7 +40,7 @@ LegalEntityTypeServiceTest {
     @MockBean
     LegalEntityTypeRepository legalEntityTypeRepository;
 
-    private List<LegalEntityType> legalEntityTypes = new ArrayList<>();
+    private final List<LegalEntityType> legalEntityTypes = new ArrayList<>();
 
     @Before
     public void setUp() {

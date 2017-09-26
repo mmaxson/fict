@@ -69,21 +69,12 @@ public class LegalEntityTypeControllerTest {
 
 
     @Before
-    public void preSetup() throws Exception {
-        long unixTimestamp = Instant.now().plusSeconds(10).getEpochSecond();
-        stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathEqualTo("/murun/auth/oauth/check_token"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("{\"aud\":[\"oauth-resource\"],\"exp\":" + unixTimestamp +  ",\"user_name\":\"marku\",\"authorities\":[\"ROLE_ADMIN\",\"ROLE_USER\"],\"client_id\":\"trusted-client\",\"scope\":[\"read\",\" write\",\" trust\"]}")));
-
+    public void beforeEach() throws Exception {
+        TestService.getMockAuthToken();
     }
 
 
-    @After
-    public void tearDown() {
 
-    }
 
     @Test
     public void testGetAllEntityTypes() throws Exception {

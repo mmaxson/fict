@@ -1,18 +1,16 @@
 package com.murun.fict.control;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.murun.commonrest.model.SuccessResource;
 import com.murun.fict.TestService;
 import com.murun.fict.dto.EntityAddressDTO;
 import com.murun.fict.main.ApplicationConfiguration;
 import com.murun.fict.model.Address;
-import com.murun.fict.model.AddressType;
 import com.murun.fict.model.EntityAddress;
 import com.murun.fict.model.LegalEntity;
 import com.murun.fict.repository.EntityAddressRepository;
 import com.murun.fict.service.AddressTypeService;
 import com.murun.fict.service.EntityAddressService;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,19 +23,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -47,10 +37,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.murun.fict.TestService.*;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -84,21 +74,8 @@ public class EntityAddressControllerTest {
 
     @Before
     public void beforeEach() throws Exception {
-        long unixTimestamp = Instant.now().plusSeconds(10).getEpochSecond();
-        stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathEqualTo("/murun/auth/oauth/check_token"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("{\"aud\":[\"oauth-resource\"],\"exp\":" + unixTimestamp +  ",\"user_name\":\"marku\",\"authorities\":[\"ROLE_ADMIN\",\"ROLE_USER\"],\"client_id\":\"trusted-client\",\"scope\":[\"read\",\" write\",\" trust\"]}")));
-
+        TestService.getMockAuthToken();
     }
-
-
-    @After
-    public void afterEach() {
-
-    }
-
 
     @Test
     public void testGetAddressesByEntityId() throws Exception {
@@ -154,7 +131,7 @@ public class EntityAddressControllerTest {
 
     @Test
     public void testDeleteEntityAddress() throws Exception {
-        mockMvc.perform( get("/addresses/id/1")
+        mockMvc.perform( delete("/addresses/id/1")
                 .param("access_token", "token"))
                 .andExpect(status().isOk());
     }

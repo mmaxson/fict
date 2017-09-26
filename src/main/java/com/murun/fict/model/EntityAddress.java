@@ -1,12 +1,10 @@
 package com.murun.fict.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.murun.fict.dto.EntityAddressDTO;
 
 import javax.persistence.*;
 import java.io.Serializable;
-// import org.hibernate.annotations.Cascade;
 
 
 @Entity

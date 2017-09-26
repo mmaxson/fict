@@ -9,8 +9,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 
 
 @Configuration
@@ -21,6 +23,12 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Resource
     private Environment env;
+
+    /*@Inject
+    public ResourceServerConfiguration(ResourceServerTokenServices tokenService) {
+        Assert.notNull(tokenService, "tokenService must not be null!");
+        this.tokenService = tokenService;
+    }*/
 
     @Override
     public void configure(HttpSecurity http) throws Exception {

@@ -1,8 +1,6 @@
 package com.murun.fict.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 
 import javax.persistence.Column;
 import javax.persistence.Id;

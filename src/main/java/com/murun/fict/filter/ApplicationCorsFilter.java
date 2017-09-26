@@ -2,23 +2,18 @@ package com.murun.fict.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import org.springframework.core.annotation.Order;
-import java.io.IOException;
+
 import javax.annotation.Resource;
-import javax.servlet.ServletException;
-import javax.servlet.FilterConfig;
-import javax.servlet.Filter;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.core.Ordered;
-import java.util.List;
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 
 @Component

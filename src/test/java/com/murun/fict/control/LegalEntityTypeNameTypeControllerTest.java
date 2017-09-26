@@ -4,13 +4,8 @@ package com.murun.fict.control;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.murun.fict.TestService;
 import com.murun.fict.main.ApplicationConfiguration;
-import com.murun.fict.model.LegalEntityType;
 import com.murun.fict.model.LegalEntityTypeNameType;
 import com.murun.fict.repository.LegalEntityTypeNameTypeRepository;
-import com.murun.fict.repository.LegalEntityTypeRepository;
-import com.murun.fict.service.AddressTypeService;
-import com.murun.fict.service.LegalEntityTypeService;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,13 +22,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import static com.murun.fict.TestService.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.murun.fict.TestService.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
@@ -65,26 +60,9 @@ public class LegalEntityTypeNameTypeControllerTest {
 
 
     @Before
-    public void preSetup() throws Exception {
-        long unixTimestamp = Instant.now().plusSeconds(10).getEpochSecond();
-        stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathEqualTo("/murun/auth/oauth/check_token"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("{\"aud\":[\"oauth-resource\"],\"exp\":" + unixTimestamp +  ",\"user_name\":\"marku\",\"authorities\":[\"ROLE_ADMIN\",\"ROLE_USER\"],\"client_id\":\"trusted-client\",\"scope\":[\"read\",\" write\",\" trust\"]}")));
-
+    public void beforeEach() throws Exception {
+        TestService.getMockAuthToken();
     }
-
-
-    @After
-    public void tearDown() {
-
-    }
-    public ResponseEntity<List<LegalEntityTypeNameType>> getAllLegalEntityTypeNameTypes() {
-        List<LegalEntityTypeNameType> legalEntityTypeNameType = legalEntityTypeNameTypeRepository.findAll();
-        return new ResponseEntity<List<LegalEntityTypeNameType>>(legalEntityTypeNameType, new HttpHeaders(), HttpStatus.OK);
-    }
-
 
     @Test
     public void testGetAllLegalEntityTypeNameTypes() throws Exception {

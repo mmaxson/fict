@@ -22,7 +22,7 @@ public class LegalEntityTypeService {
     LegalEntityTypeRepository legalEntityTypeRepository;
 
 
-    private Map<String, Integer> legalEntityTypeReverseLookup = new HashMap<>();
+    private final Map<String, Integer> legalEntityTypeReverseLookup = new HashMap<>();
 
     @PostConstruct
     protected void initialize(){

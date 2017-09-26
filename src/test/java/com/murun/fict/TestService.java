@@ -4,10 +4,13 @@ import com.murun.fict.model.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
 
 public class TestService {
 
@@ -202,6 +205,7 @@ public class TestService {
     public static LegalEntity createIndividualLegalEntity(){
         LegalEntity retVal = new LegalEntity();
         retVal.setLegalEntityType(createLegalEntityType(LegalEntityTypeTestEnum.INDIVIDUAL));
+        retVal.setEntityNames( new HashSet<EntityName>());
         return retVal;
     }
 
@@ -215,6 +219,7 @@ public class TestService {
     public static LegalEntity createLivingTrustLegalEntity(){
         LegalEntity retVal = new LegalEntity();
         retVal.setLegalEntityType(createLegalEntityType(LegalEntityTypeTestEnum.LIVING_TRUST));
+        retVal.setEntityNames( new HashSet<EntityName>());
         return retVal;
     }
 
@@ -224,8 +229,7 @@ public class TestService {
         legalEntities.add(TestService.createIndividualLegalEntity());
         legalEntities.add(TestService.createCorporateLegalEntity());
         legalEntities.add(TestService.createLivingTrustLegalEntity());
-        Page<LegalEntity> legalEntitiesPage = new PageImpl(legalEntities);
-        return legalEntitiesPage;
+        return  new PageImpl(legalEntities);
     }
 
     public static Page<LegalEntity> createLegalEntitiesPageCorporationsOnly(){
@@ -234,8 +238,19 @@ public class TestService {
         legalEntities.add(TestService.createCorporateLegalEntity());
         legalEntities.add(TestService.createCorporateLegalEntity());
         legalEntities.add(TestService.createCorporateLegalEntity());
-        Page<LegalEntity> legalEntitiesPage = new PageImpl(legalEntities);
-        return legalEntitiesPage;
+        return new PageImpl(legalEntities);
+    }
+
+
+    public static void getMockAuthToken() {
+
+        long unixTimestamp = Instant.now().plusSeconds(10).getEpochSecond();
+        stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathEqualTo("/murun/auth/oauth/check_token"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"aud\":[\"oauth-resource\"],\"exp\":" + unixTimestamp + ",\"user_name\":\"marku\",\"authorities\":[\"ROLE_ADMIN\",\"ROLE_USER\"],\"client_id\":\"trusted-client\",\"scope\":[\"read\",\" write\",\" trust\"]}")));
+
     }
 }
 

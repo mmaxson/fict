@@ -35,7 +35,7 @@ public class AddressTypeServiceTest {
     @MockBean
     AddressTypeRepository addressTypeRepository;
 
-    private List<AddressType> addressTypes = new ArrayList<>();
+    private final List<AddressType> addressTypes = new ArrayList<>();
 
     @Before
     public void setUp() {

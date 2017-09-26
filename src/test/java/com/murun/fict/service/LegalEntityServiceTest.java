@@ -10,18 +10,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
-import static com.murun.fict.TestService.*;
+import static com.murun.fict.TestService.LegalEntityTypeTestEnum;
+import static com.murun.fict.TestService.createLegalEntityType;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -47,10 +48,10 @@ public class LegalEntityServiceTest {
     private AddressTypeService addressTypeService;
 
 
-    private List<LegalEntity> legalEntityList = new ArrayList<>();
-    private List<LegalEntity> legalEntityList1 = new ArrayList<>();
-    private LegalEntity oneLegalEntity = TestService.createCorporateLegalEntity();
-    private LegalEntity exampleLegalEntity = new LegalEntity();
+    private final List<LegalEntity> legalEntityList = new ArrayList<>();
+    private final List<LegalEntity> legalEntityList1 = new ArrayList<>();
+    private final LegalEntity oneLegalEntity = TestService.createCorporateLegalEntity();
+    private final LegalEntity exampleLegalEntity = new LegalEntity();
 
     @Before
     public void setUp() {
