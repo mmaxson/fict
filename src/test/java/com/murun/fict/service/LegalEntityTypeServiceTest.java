@@ -29,7 +29,9 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes= ApplicationConfiguration.class)
 
 
-public class LegalEntityTypeServiceTest {
+public class
+
+LegalEntityTypeServiceTest {
 
     @Resource
     LegalEntityTypeService legalEntityTypeService;

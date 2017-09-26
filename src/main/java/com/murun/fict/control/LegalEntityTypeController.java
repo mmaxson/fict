@@ -32,7 +32,7 @@ public class LegalEntityTypeController {
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<LegalEntityType>> getAllEntities() {
+    public ResponseEntity<List<LegalEntityType>> getAllEntityTypes() {
 
         List<LegalEntityType> legalEntityTypes = legalEntityTypeRepository.findAll();
         return new ResponseEntity<List<LegalEntityType>>(legalEntityTypes, new HttpHeaders(), HttpStatus.OK);

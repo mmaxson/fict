@@ -2,7 +2,9 @@ package com.murun.fict.dto;
 
 import com.murun.fict.model.Address;
 
-public class EntityAddressDTO {
+import java.io.Serializable;
+
+public class EntityAddressDTO implements Serializable {
     private Integer entityAddressId;
     private Integer addressTypeId;
     private Address address;

@@ -25,19 +25,19 @@ public class EntityAddressService {
     @Resource
     AddressTypeService addressTypeService;
 
-    public Page<EntityAddress> getEntityAddressesByEntityId(Integer legalEntityId, Pageable pageRequest) {
-        logger.info("getEntityAddressesByEntityId: " + pageRequest.getPageNumber() + ' ' + pageRequest.getPageSize());
-        return entityAddressRepository.getAddressesByEntityId(legalEntityId, pageRequest);
+    public Page<EntityAddress> getEntityAddressesByLegalEntityId(Integer legalEntityId, Pageable pageRequest) {
+        logger.info("getEntityAddressesByLegalEntityId: " + pageRequest.getPageNumber() + ' ' + pageRequest.getPageSize());
+        return entityAddressRepository.getEntityAddressesByLegalEntityId(legalEntityId, pageRequest);
     }
 
-    public void saveEntityAddress(EntityAddressDTO entityAddressDTO){
+    public EntityAddress saveEntityAddress(EntityAddressDTO entityAddressDTO){
         EntityAddress entityAddress = EntityAddress.createEntityAddress(entityAddressDTO, addressTypeService.createAddressTypeById(entityAddressDTO.getAddressTypeId()));
         logger.info("saveEntityAddress: " +  entityAddress);
-        entityAddressRepository.saveAndFlush(entityAddress);
+        return entityAddressRepository.saveAndFlush(entityAddress);
     }
 
-    public Integer deleteEntityAddressById(Integer id){
-        logger.info("deleteEntityAddressById: " +  id);
+    public Integer deleteEntityAddressesByEntityAddressId(Integer id){
+        logger.info("deleteEntityAddressesByEntityAddressId: " +  id);
 
         return entityAddressRepository.deleteEntityAddressesByEntityAddressId(id);
     }

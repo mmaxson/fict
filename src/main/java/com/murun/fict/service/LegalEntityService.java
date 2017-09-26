@@ -41,11 +41,13 @@ public class LegalEntityService {
         return legalEntityRepository.getAllEntitiesFilterByEntityType(legalEntityTypeId, pageRequest);
     }
 
-    public LegalEntity getEntityById(int legalEntityId) {
+    public LegalEntity getEntityById(Integer legalEntityId) {
         logger.info("getEntityById");
         return legalEntityRepository.getOne(legalEntityId);
     }
 
+    // TODO reimplement
+/*
     public Page<LegalEntity> getEntitiesWithAddressesInState(String state, Pageable pageRequest) {
         logger.info("getEntitiesWithAddressesInState");
         return new PageImpl( new ArrayList<LegalEntity>());
@@ -64,7 +66,7 @@ public class LegalEntityService {
         Integer addressTypeId = addressTypeService.getAddressTypeId(onlyAddressTypeText);
         return new PageImpl( new ArrayList<LegalEntity>());
 
-    }
+    }*/
 
 
 }

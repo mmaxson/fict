@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 public interface EntityAddressRepository extends JpaRepository<EntityAddress, Integer> {
 
     @Query("select entityAddress from EntityAddress as entityAddress where entityAddress.legalEntity.legalEntityId = :legalEntityId")
-    Page<EntityAddress> getAddressesByEntityId(@Param("legalEntityId") Integer legalEntityId, Pageable page);
+    Page<EntityAddress> getEntityAddressesByLegalEntityId(@Param("legalEntityId") Integer legalEntityId, Pageable page);
 
 
     @Transactional

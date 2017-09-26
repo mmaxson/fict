@@ -66,8 +66,8 @@ public class LegalEntityController {
         return new ResponseEntity<LegalEntity>(legalEntityService.getEntityById(id), new HttpHeaders(), HttpStatus.OK);
     }
 
-
-    @RequestMapping(method = RequestMethod.GET, value = "/state/{state}")
+// TODO fix
+   /* @RequestMapping(method = RequestMethod.GET, value = "/state/{state}")
     public ResponseEntity<Page<LegalEntity>> getEntitiesWithAddressesInState(@PathVariable("state") String state,
                                                                              @RequestParam(value = "entity_type", required = false) String legalEntityTypeText,
                                                                              Pageable pageRequest ) {
@@ -85,8 +85,8 @@ public class LegalEntityController {
         return new ResponseEntity<Page<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
     }
 
-
-    @RequestMapping(method = RequestMethod.GET, value = "/city/{city}")
+*/
+ /*   @RequestMapping(method = RequestMethod.GET, value = "/city/{city}")
     public ResponseEntity<Page<LegalEntity>> getEntitiesWithAddressesInCity(@PathVariable("city") String city,
                                                                             @RequestParam(value = "entity_type", required = false) String legalEntityTypeText,
                                                                             Pageable pageRequest) {
@@ -116,6 +116,6 @@ public class LegalEntityController {
 
         return new ResponseEntity<Page<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
     }
-
+*/
 
 }

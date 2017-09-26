@@ -20,7 +20,7 @@ public class EntityAddress implements Serializable {
     //@JsonIgnore
     private Integer entityAddressId;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ADDRESS_TYPE_ID", nullable = false)
     //@JsonBackReference
     private AddressType addressType;

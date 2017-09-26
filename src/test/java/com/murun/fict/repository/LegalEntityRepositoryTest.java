@@ -108,10 +108,10 @@ public class LegalEntityRepositoryTest {
         addressTypeRepository.save(adMail);
         addressTypeRepository.flush();
 
-        Address ad1 = createAddress("Santa Monica", "CA", "90402");
-        Address ad2 = createAddress("Westwood", "CA", "90401");
-        Address ad3 = createAddress("Phoenix", "AZ", "910202");
-        Address ad4 = createAddress("San Antonio", "TX", "78201");
+        Address ad1 = createAddress(1,"Santa Monica", "CA", "90402");
+        Address ad2 = createAddress(2,"Westwood", "CA", "90401");
+        Address ad3 = createAddress(3,"Phoenix", "AZ", "910202");
+        Address ad4 = createAddress(4,"San Antonio", "TX", "78201");
         addressRepository.save(ad1);
         addressRepository.save(ad2);
         addressRepository.save(ad3);
@@ -122,10 +122,11 @@ public class LegalEntityRepositoryTest {
         EntityAddress entityAddress2 = createEntityAddress(legalEntity, ad2, adResidence);
         EntityAddress entityAddress3 = createEntityAddress(legalEntity, ad3, adWork);
         EntityAddress entityAddress4 = createEntityAddress(legalEntity, ad4, adMail);
-        entityAddressRepository.save(entityAddress1);
-        entityAddressRepository.save(entityAddress2);
-        entityAddressRepository.save(entityAddress3);
-        entityAddressRepository.save(entityAddress4);
+
+        entityAddress1 = entityAddressRepository.save(entityAddress1);
+        entityAddress2 = entityAddressRepository.save(entityAddress2);
+        entityAddress3 = entityAddressRepository.save(entityAddress3);
+        entityAddress4 = entityAddressRepository.save(entityAddress4);
         entityAddressRepository.flush();
 
         Set<EntityAddress> entityAddresses = new HashSet<>();

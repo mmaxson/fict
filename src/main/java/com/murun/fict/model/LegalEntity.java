@@ -21,7 +21,7 @@ public class LegalEntity implements Serializable {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "LEGAL_ENTITY_TYPE_ID", nullable = false)
-    @JsonIgnore
+   // @JsonIgnore
     private LegalEntityType legalEntityType;
 
     @OneToMany(mappedBy = "legalEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

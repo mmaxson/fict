@@ -35,7 +35,7 @@ public class EntityAddressController {
             throw new IllegalArgumentException(id + " is not a valid entity id.");
         }
 
-        Page<EntityAddress> legalEntities = entityAddressService.getEntityAddressesByEntityId(id, pageRequest);
+        Page<EntityAddress> legalEntities = entityAddressService.getEntityAddressesByLegalEntityId(id, pageRequest);
         return new ResponseEntity<Page<EntityAddress>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
     }
 
@@ -54,7 +54,7 @@ public class EntityAddressController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/id/{id}")
     public ResponseEntity<SuccessResource> deleteEntityAddress(@PathVariable("id") Integer id) {
-        Integer retVal = entityAddressService.deleteEntityAddressById(id);
+        Integer retVal = entityAddressService.deleteEntityAddressesByEntityAddressId(id);
         return new ResponseEntity<SuccessResource>(new SuccessResource( retVal.toString(), "Successfully deleted."), new HttpHeaders(), HttpStatus.OK );
     }
 }

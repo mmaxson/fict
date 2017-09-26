@@ -29,7 +29,7 @@ public class LegalEntityTypeNameTypeController {
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<LegalEntityTypeNameType>> getAllEntities() {
+    public ResponseEntity<List<LegalEntityTypeNameType>> getAllLegalEntityTypeNameTypes() {
         List<LegalEntityTypeNameType> legalEntityTypeNameType = legalEntityTypeNameTypeRepository.findAll();
         return new ResponseEntity<List<LegalEntityTypeNameType>>(legalEntityTypeNameType, new HttpHeaders(), HttpStatus.OK);
     }

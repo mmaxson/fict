@@ -4,11 +4,11 @@ package com.murun.fict.control;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.murun.fict.TestService;
 import com.murun.fict.main.ApplicationConfiguration;
-import com.murun.fict.model.LegalEntity;
 import com.murun.fict.model.LegalEntityType;
+import com.murun.fict.model.LegalEntityTypeNameType;
+import com.murun.fict.repository.LegalEntityTypeNameTypeRepository;
 import com.murun.fict.repository.LegalEntityTypeRepository;
 import com.murun.fict.service.AddressTypeService;
-import com.murun.fict.service.LegalEntityService;
 import com.murun.fict.service.LegalEntityTypeService;
 import org.junit.After;
 import org.junit.Before;
@@ -20,17 +20,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import static com.murun.fict.TestService.*;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.hamcrest.Matchers.hasSize;
@@ -49,20 +50,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureWebMvc
 @AutoConfigureMockMvc
-public class LegalEntityTypeControllerTest {
+public class LegalEntityTypeNameTypeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
 
     @MockBean
-    LegalEntityTypeService legalEntityTypeService;
+    LegalEntityTypeNameTypeRepository legalEntityTypeNameTypeRepository;
 
-    @MockBean
-    LegalEntityTypeRepository legalEntityTypeRepository;
-
-    @MockBean
-    AddressTypeService addressTypeService;
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(9001);
@@ -84,24 +80,38 @@ public class LegalEntityTypeControllerTest {
     public void tearDown() {
 
     }
+    public ResponseEntity<List<LegalEntityTypeNameType>> getAllLegalEntityTypeNameTypes() {
+        List<LegalEntityTypeNameType> legalEntityTypeNameType = legalEntityTypeNameTypeRepository.findAll();
+        return new ResponseEntity<List<LegalEntityTypeNameType>>(legalEntityTypeNameType, new HttpHeaders(), HttpStatus.OK);
+    }
+
 
     @Test
-    public void testGetAllEntityTypes() throws Exception {
-        List<LegalEntityType> legalEntityTypes = new ArrayList<>();
-        legalEntityTypes.add( TestService.createLegalEntityType(TestService.LegalEntityTypeTestEnum.INDIVIDUAL));
-        legalEntityTypes.add( TestService.createLegalEntityType(TestService.LegalEntityTypeTestEnum.CORPORATION));
-        legalEntityTypes.add( TestService.createLegalEntityType(TestService.LegalEntityTypeTestEnum.LIVING_TRUST));
+    public void testGetAllLegalEntityTypeNameTypes() throws Exception {
+        List<LegalEntityTypeNameType> legalEntityTypeNameType = new ArrayList<>();
+        legalEntityTypeNameType.add( new LegalEntityTypeNameType( 1,  createLegalEntityType(LegalEntityTypeTestEnum.CORPORATION),
+                                                   createNameType(NameTypeTestEnum.NAME_ORG)  )) ;
+        legalEntityTypeNameType.add( new LegalEntityTypeNameType( 2,  createLegalEntityType(LegalEntityTypeTestEnum.INDIVIDUAL),
+                createNameType(NameTypeTestEnum.NAME_FIRST)  )) ;
+        legalEntityTypeNameType.add( new LegalEntityTypeNameType( 3,  createLegalEntityType(LegalEntityTypeTestEnum.INDIVIDUAL),
+                createNameType(NameTypeTestEnum.NAME_LAST)  )) ;
 
-        given(legalEntityTypeRepository.findAll()).willReturn(legalEntityTypes);
 
-        mockMvc.perform( get( "/entity-types" )
+        given(legalEntityTypeNameTypeRepository.findAll()).willReturn(legalEntityTypeNameType);
+
+        mockMvc.perform( get( "/entityTypeNameTypes" )
                 .param("access_token", "token"))
 
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].legalEntityTypeText", is(TestService.LegalEntityTypeTestEnum.INDIVIDUAL.entityTypeText())) )
-                .andExpect(jsonPath("$[1].legalEntityTypeText", is(TestService.LegalEntityTypeTestEnum.CORPORATION.entityTypeText())) )
-                .andExpect(jsonPath("$[2].legalEntityTypeText", is(TestService.LegalEntityTypeTestEnum.LIVING_TRUST.entityTypeText())) );
+                .andExpect(jsonPath("$[0].legalEntityType.legalEntityTypeText", is(LegalEntityTypeTestEnum.CORPORATION.entityTypeText())) )
+                .andExpect(jsonPath("$[0].nameType.nameTypeText", is(NameTypeTestEnum.NAME_ORG.nameTypeText())))
+
+                .andExpect(jsonPath("$[1].legalEntityType.legalEntityTypeText", is(LegalEntityTypeTestEnum.INDIVIDUAL.entityTypeText())) )
+                .andExpect(jsonPath("$[1].nameType.nameTypeText", is(NameTypeTestEnum.NAME_FIRST.nameTypeText())))
+
+                .andExpect(jsonPath("$[2].legalEntityType.legalEntityTypeText", is(LegalEntityTypeTestEnum.INDIVIDUAL.entityTypeText())) )
+                .andExpect(jsonPath("$[2].nameType.nameTypeText", is(NameTypeTestEnum.NAME_LAST.nameTypeText()))) ;
     }
 
 }
