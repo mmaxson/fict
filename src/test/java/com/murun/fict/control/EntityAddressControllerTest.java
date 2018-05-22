@@ -29,11 +29,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.murun.fict.TestService.*;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
@@ -53,6 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureWebMvc
 @AutoConfigureMockMvc
+
 public class EntityAddressControllerTest {
 
     @Autowired
@@ -74,7 +73,7 @@ public class EntityAddressControllerTest {
 
     @Before
     public void beforeEach() throws Exception {
-        TestService.getMockAuthToken();
+        TestService.checkMockAuthToken();
     }
 
     @Test
@@ -89,10 +88,11 @@ public class EntityAddressControllerTest {
 
         Page<EntityAddress> entityAddressesPage = new PageImpl(entityAddresses);
 
-        given(entityAddressService.getEntityAddressesByLegalEntityId(1, new PageRequest( 0, 20))).willReturn(entityAddressesPage);
+        given(entityAddressService.getEntityAddressesByLegalEntityId(1, PageRequest.of( 0, 20))).willReturn(entityAddressesPage);
 
         mockMvc.perform( get("/addresses/id/1")
-                .param("access_token", "token"))
+               .param("access_token", "token")
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].entityAddressId", is(1)) )
                 .andExpect(jsonPath("$.content[0].addressType.addressTypeId", is(AddressTypeTestEnum.MAIL.addressTypeId())) )
@@ -126,7 +126,7 @@ public class EntityAddressControllerTest {
         mockMvc.perform(post("/addresses")
                 .param("access_token", "token")
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(entityAddressDTO)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test

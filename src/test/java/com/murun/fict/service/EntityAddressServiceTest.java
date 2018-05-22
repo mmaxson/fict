@@ -56,9 +56,9 @@ public class EntityAddressServiceTest {
         entityAddresses.add( createEntityAddress(createCorporateLegalEntity(),createAddress("city", "CA","11111"), createWorkAddressType()));
 
         Page<EntityAddress> entityAddressesPage = new PageImpl(entityAddresses);
-        when(entityAddressRepository.getEntityAddressesByLegalEntityId(1, new PageRequest( 0, 20))).thenReturn(entityAddressesPage);
+        when(entityAddressRepository.getEntityAddressesByLegalEntityId(1, PageRequest.of( 0, 20))).thenReturn(entityAddressesPage);
 
-        assertEquals( entityAddressesPage, entityAddressService.getEntityAddressesByLegalEntityId(1, new PageRequest( 0, 20)));
+        assertEquals( entityAddressesPage, entityAddressService.getEntityAddressesByLegalEntityId(1, PageRequest.of( 0, 20)));
     }
 
     @Test

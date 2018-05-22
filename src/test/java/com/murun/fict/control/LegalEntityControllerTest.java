@@ -8,7 +8,6 @@ import com.murun.fict.model.LegalEntity;
 import com.murun.fict.service.AddressTypeService;
 import com.murun.fict.service.LegalEntityService;
 import com.murun.fict.service.LegalEntityTypeService;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,9 +23,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.Instant;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
@@ -64,7 +60,7 @@ public class LegalEntityControllerTest {
 
     @Before
     public void beforeEach() throws Exception {
-        TestService.getMockAuthToken();
+        TestService.checkMockAuthToken();
     }
 
 
@@ -73,7 +69,7 @@ public class LegalEntityControllerTest {
     @Test
     public void testGetAllEntities() throws Exception {
 
-        given(legalEntityService.getAllLegalEntities(new PageRequest( 0, 20))).willReturn(TestService.createLegalEntitiesPageMixedEntityType());
+        given(legalEntityService.getAllLegalEntities(PageRequest.of( 0, 20))).willReturn(TestService.createLegalEntitiesPageMixedEntityType());
 
         mockMvc.perform(get("/entities")
                 .param("access_token", "token")
@@ -87,10 +83,10 @@ public class LegalEntityControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestForBadEntityType() throws Exception {
+    public void shouldReturnBadRequestForInvalidEntityType() throws Exception {
 
         given(legalEntityTypeService.isValidLegalEntityType("ZZZ")).willReturn(false);
-        given(legalEntityService.getAllLegalEntities(new PageRequest( 0, 20))).willReturn(TestService.createLegalEntitiesPageMixedEntityType());
+        given(legalEntityService.getAllLegalEntities(PageRequest.of( 0, 20))).willReturn(TestService.createLegalEntitiesPageMixedEntityType());
 
         mockMvc.perform( get("/entities?entity_type='ZZZ'")
                 .param("access_token", "token"))
@@ -101,7 +97,7 @@ public class LegalEntityControllerTest {
     public void shouldReturnCorporationsOnly() throws Exception {
 
         given(legalEntityTypeService.isValidLegalEntityType(TestService.LegalEntityTypeTestEnum.CORPORATION.entityTypeText())).willReturn(true);
-        given(legalEntityService.getAllEntitiesFilterByEntityType("Corporation", new PageRequest( 0, 20)))
+        given(legalEntityService.getAllEntitiesFilterByEntityType("Corporation", PageRequest.of( 0, 20)))
                 .willReturn(TestService.createLegalEntitiesPageCorporationsOnly());
 
         mockMvc.perform( get("/entities?entity_type=Corporation")

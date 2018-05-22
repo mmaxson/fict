@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController()
 @RequestMapping(value="/addresses",  produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,15 +43,15 @@ public class EntityAddressController {
 
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<SuccessResource> updateEntityAddress(@RequestBody EntityAddressDTO dto) {
+    public ResponseEntity<SuccessResource> updateEntityAddress(@Valid @NotNull @RequestBody EntityAddressDTO dto) {
         entityAddressService.saveEntityAddress(dto);
         return new ResponseEntity<SuccessResource>(new SuccessResource("0", "Successfully saved."), new HttpHeaders(), HttpStatus.OK );
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<SuccessResource> addEntityAddress(@RequestBody EntityAddressDTO dto) {
+    public ResponseEntity<SuccessResource> addEntityAddress(@Valid @NotNull @RequestBody EntityAddressDTO dto) {
         entityAddressService.saveEntityAddress(dto);
-        return new ResponseEntity<SuccessResource>(new SuccessResource("0", "Successfully created."), new HttpHeaders(), HttpStatus.OK );
+        return new ResponseEntity<SuccessResource>(new SuccessResource("0", "Successfully created."), new HttpHeaders(), HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/id/{id}")

@@ -1,18 +1,13 @@
 package com.murun.fict.main;
 
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import com.murun.fict.filter.ApplicationCorsFilter;
 import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.*;
-import org.springframework.core.env.Environment;
+import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -21,6 +16,10 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -30,6 +29,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.util.Arrays;
 import java.util.Properties;
 
 //import org.h2.server.web.WebServlet;
@@ -38,43 +38,36 @@ import java.util.Properties;
 @EnableTransactionManagement
 @ComponentScan(basePackages="com.murun.*")
 
-//@EnableSpringDataWebSupport
+
+
 @EnableWebSecurity
 @EnableJpaRepositories("com.murun.fict.*")
-@EnableCaching
+//@EnableCaching
 @Configuration
 @EnableSwagger2
 @RefreshScope
-@Import({ ResourceServerConfiguration.class })
+
+@Import({ ResourceServerConfiguration.class /*,WebSecurityConfiguration.class*/ })
 public class ApplicationConfiguration  {
 
 
-    private static final String PROPERTY_NAME_DATABASE_DRIVER = "jdbc.driverClassName";
-    private static final String PROPERTY_NAME_DATABASE_PASSWORD = "jdbc.password";
-    private static final String PROPERTY_NAME_DATABASE_URL = "jdbc.url";
-    private static final String PROPERTY_NAME_DATABASE_USERNAME = "jdbc.username";
+    private static final String PROPERTY_VALUE_ENTITY_MANAGER_PACKAGES_TO_SCAN = "com.murun.fict.*";
+
     private static final String PROPERTY_NAME_HIBERNATE_DIALECT = "hibernate.dialect";
     private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
-
     private static final String PROPERTY_NAME_HIBERNATE_JDBC_FETCH_SIZE = "hibernate.jdbc.fetch_size";
     private static final String PROPERTY_NAME_HIBERNATE_JDBC_BATCH_SIZE = "hibernate.jdbc.batch_size";
     private static final String PROPERTY_NAME_HIBERNATE_CONNECTION_POOL_SIZE = "hibernate.connection.pool_size";
-
     private static final String PROPERTY_NAME_HIBERNATE_DEFAULT_SCHEMA = "hibernate.default_schema";
     private static final String PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
-
-
     private static final String PROPERTY_NAME_HIBERNATE_ID_NEW_GENERATOR_MAPPINGS =  "hibernate.id.new_generator_mappings";
 
 
-    private static final String PROPERTY_VALUE_ENTITYMANAGER_PACKAGES_TO_SCAN = "com.murun.fict.*";
-
-
     @Resource
-    private Environment env;
+    private ApplicationProperties applicationProperties;
 
-    @Resource
-    private JedisConnectionFactory jedisConnFactory;
+  //  @Resource
+  //  private JedisConnectionFactory jedisConnFactory;
 
 
     /*@Profile("dev")
@@ -91,10 +84,10 @@ public class ApplicationConfiguration  {
 
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-        dataSource.setDriverClassName(env.getRequiredProperty(PROPERTY_NAME_DATABASE_DRIVER));
-        dataSource.setUrl(env.getRequiredProperty(PROPERTY_NAME_DATABASE_URL));
-        dataSource.setUsername(env.getRequiredProperty(PROPERTY_NAME_DATABASE_USERNAME));
-        dataSource.setPassword((env.getRequiredProperty(PROPERTY_NAME_DATABASE_PASSWORD)));
+        dataSource.setDriverClassName(applicationProperties.getJdbc().getDriverClassName());
+        dataSource.setUrl(applicationProperties.getJdbc().getUrl());
+        dataSource.setUsername(applicationProperties.getJdbc().getUsername());
+        dataSource.setPassword(applicationProperties.getJdbc().getPassword());
         return dataSource;
     }
 
@@ -104,7 +97,7 @@ public class ApplicationConfiguration  {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());
         entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
-        entityManagerFactoryBean.setPackagesToScan(PROPERTY_VALUE_ENTITYMANAGER_PACKAGES_TO_SCAN);
+        entityManagerFactoryBean.setPackagesToScan(PROPERTY_VALUE_ENTITY_MANAGER_PACKAGES_TO_SCAN);
         entityManagerFactoryBean.setPersistenceUnitName("control");
 
         entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
@@ -117,18 +110,19 @@ public class ApplicationConfiguration  {
     }
 
     private Properties hibProperties() {
-        Properties properties = new Properties();
-        properties.put(PROPERTY_NAME_HIBERNATE_DIALECT,	env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT));
-        properties.put(PROPERTY_NAME_HIBERNATE_SHOW_SQL, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_SHOW_SQL));
-        properties.put(PROPERTY_NAME_HIBERNATE_JDBC_FETCH_SIZE, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_JDBC_FETCH_SIZE));
-        properties.put(PROPERTY_NAME_HIBERNATE_JDBC_BATCH_SIZE, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_JDBC_BATCH_SIZE));
-        properties.put(PROPERTY_NAME_HIBERNATE_CONNECTION_POOL_SIZE, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_CONNECTION_POOL_SIZE));
-        properties.put(PROPERTY_NAME_HIBERNATE_DEFAULT_SCHEMA, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DEFAULT_SCHEMA));
-        properties.put(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO));
-        properties.put(PROPERTY_NAME_HIBERNATE_ID_NEW_GENERATOR_MAPPINGS, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_ID_NEW_GENERATOR_MAPPINGS));
 
+        Properties properties = new Properties();
+        properties.put(PROPERTY_NAME_HIBERNATE_DIALECT,	applicationProperties.getHibernate().getDialect());
+        properties.put(PROPERTY_NAME_HIBERNATE_SHOW_SQL, applicationProperties.getHibernate().getShowSql());
+        properties.put(PROPERTY_NAME_HIBERNATE_JDBC_FETCH_SIZE, applicationProperties.getHibernate().getJdbcFetchSize());
+        properties.put(PROPERTY_NAME_HIBERNATE_JDBC_BATCH_SIZE, applicationProperties.getHibernate().getJdbcBatchSize());
+        properties.put(PROPERTY_NAME_HIBERNATE_CONNECTION_POOL_SIZE, applicationProperties.getHibernate().getConnectionPoolSize());
+        properties.put(PROPERTY_NAME_HIBERNATE_DEFAULT_SCHEMA, applicationProperties.getHibernate().getDefaultSchema());
+        properties.put(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO, applicationProperties.getHibernate().getHbm2ddlAuto());
+        properties.put(PROPERTY_NAME_HIBERNATE_ID_NEW_GENERATOR_MAPPINGS, applicationProperties.getHibernate().getIdNewGeneratorMappings());
         return properties;
     }
+
     @Bean
     public JpaTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -142,26 +136,56 @@ public class ApplicationConfiguration  {
         return new Jackson2ObjectMapperBuilder().modulesToInstall(Hibernate5Module.class);
     }
 
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(Arrays.asList(applicationProperties.getFict().getAllowedOrigins()));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     @Bean
+    FilterRegistrationBean<CorsFilter> corsFilter(CorsConfigurationSource corsConfigurationSource) {
+        CorsFilter corsFilter = new CorsFilter(corsConfigurationSource);
+
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>();
+        bean.setFilter(corsFilter);
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
+    }
+
+   /* @Bean
     public StringRedisSerializer stringRedisSerializer() {
         return new StringRedisSerializer();
     }
 
-    @Bean
-    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory cf) {
-        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(cf);
-        return redisTemplate;
-    }
 
-    @Bean
+
+    /*@Bean
     public CacheManager cacheManager(RedisTemplate redisTemplate) {
         RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
 
         cacheManager.setDefaultExpiration(-1);
         return cacheManager;
-    }
+    }*/
+
+
+//    @Bean
+//    JedisConnectionFactory jedisConnectionFactory() {
+//        return new JedisConnectionFactory();
+//    }
+
+//    @Bean
+//    public RedisTemplate<String, Object> redisTemplate() {
+//        RedisTemplate<String, Object> template = new RedisTemplate<>();
+//        template.setConnectionFactory(jedisConnectionFactory());
+//        return template;
+//    }
 
     @Bean
     public Docket api() {

@@ -19,8 +19,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 
+import java.util.Optional;
+
 import static com.murun.fict.TestService.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
 @ActiveProfiles("test")
@@ -72,8 +75,9 @@ public class EntityAddressRepositoryTest {
         entityAddress = entityAddressRepository.save(entityAddress);
         int entityAddressId = entityAddress.getEntityAddressId();
 
-        EntityAddress entityAddressRetrieved = entityAddressRepository.findOne(entityAddressId);
-        assertEquals(entityAddress.getEntityAddressId(), entityAddressRetrieved.getEntityAddressId());
+        Optional<EntityAddress> entityAddressRetrieved = entityAddressRepository.findById(entityAddressId);
+
+        assertEquals(entityAddress.getEntityAddressId(), entityAddressRetrieved.get().getEntityAddressId());
     }
 
     @Test
@@ -86,15 +90,15 @@ public class EntityAddressRepositoryTest {
         entityAddress.getAddress().setCity("new city");
         entityAddressRepository.save(entityAddress);
 
-        EntityAddress entityAddressRetrieved = entityAddressRepository.findOne(entityAddressId);
-        assertEquals(entityAddress.getAddress().getCity(), entityAddressRetrieved.getAddress().getCity());
+        Optional<EntityAddress> entityAddressRetrieved = entityAddressRepository.findById(entityAddressId);
+        assertEquals(entityAddress.getAddress().getCity(), entityAddressRetrieved.get().getAddress().getCity());
     }
 
     @Test
     public void shouldGetAddressesByEntityId() {
         entityAddressRepository.save(createEntityAddress(legalEntity, createAddress("city-1", "CA","11111"), createWorkAddressType()));
 
-        Page<EntityAddress> entityAddressPage = entityAddressRepository.getEntityAddressesByLegalEntityId(legalEntity.getLegalEntityId(), new PageRequest( 0, 20));
+        Page<EntityAddress> entityAddressPage = entityAddressRepository.getEntityAddressesByLegalEntityId(legalEntity.getLegalEntityId(), PageRequest.of( 0, 20));
         assertEquals(legalEntity.getEntityAddresses().iterator().next(), entityAddressPage.getContent().get(0));
     }
 
@@ -106,6 +110,6 @@ public class EntityAddressRepositoryTest {
         int entityAddressId = entityAddress.getEntityAddressId();
 
         entityAddressRepository.deleteEntityAddressesByEntityAddressId(entityAddressId);
-        assertNull(entityAddressRepository.findOne(entityAddressId));
+        assertFalse(entityAddressRepository.findById(entityAddressId).isPresent());
     }
 }

@@ -87,7 +87,7 @@ public class LegalEntityRepositoryTest {
         legalEntity.setLegalEntityType(leTrust);
         legalEntityRepository.save(legalEntity);
 
-        LegalEntity legalEntityRetrieved = legalEntityRepository.findOne(legalEntity.getLegalEntityId());
+        LegalEntity legalEntityRetrieved = legalEntityRepository.getOne(legalEntity.getLegalEntityId());
         assertEquals(legalEntity.getLegalEntityType(), legalEntityRetrieved.getLegalEntityType());
     }
 
@@ -134,7 +134,7 @@ public class LegalEntityRepositoryTest {
         entityAddresses.add(entityAddress2);
         entityAddresses.add(entityAddress3);
         entityAddresses.add(entityAddress4);
-        entityAddressRepository.save(entityAddresses);
+        entityAddressRepository.saveAll(entityAddresses);
         entityAddressRepository.flush();
         legalEntity.setEntityAddresses(entityAddresses);
 

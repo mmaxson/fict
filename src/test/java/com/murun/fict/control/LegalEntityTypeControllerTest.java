@@ -4,13 +4,10 @@ package com.murun.fict.control;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.murun.fict.TestService;
 import com.murun.fict.main.ApplicationConfiguration;
-import com.murun.fict.model.LegalEntity;
 import com.murun.fict.model.LegalEntityType;
 import com.murun.fict.repository.LegalEntityTypeRepository;
 import com.murun.fict.service.AddressTypeService;
-import com.murun.fict.service.LegalEntityService;
 import com.murun.fict.service.LegalEntityTypeService;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,19 +17,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.ArrayList;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
@@ -70,7 +62,7 @@ public class LegalEntityTypeControllerTest {
 
     @Before
     public void beforeEach() throws Exception {
-        TestService.getMockAuthToken();
+        TestService.checkMockAuthToken();
     }
 
 

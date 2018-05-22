@@ -15,19 +15,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.murun.fict.TestService.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -41,7 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes= {ApplicationConfiguration.class})
-//@WebMvcTest(LegalEntityControllerTest.class)  // cannot be used with SpringBootTest
 
 @AutoConfigureWebMvc
 @AutoConfigureMockMvc
@@ -61,7 +55,7 @@ public class LegalEntityTypeNameTypeControllerTest {
 
     @Before
     public void beforeEach() throws Exception {
-        TestService.getMockAuthToken();
+        TestService.checkMockAuthToken();
     }
 
     @Test

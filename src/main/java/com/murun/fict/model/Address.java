@@ -1,12 +1,14 @@
 package com.murun.fict.model;
 
 
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 
 @Entity
 @Table(name="ADDRESS")
+//@RedisHash("Address")
 public class Address implements Serializable {
 
     @Id
@@ -31,7 +33,6 @@ public class Address implements Serializable {
     }
 
     public Address( String street, String city, String state, String zipCode) {
-       // this.addressId = addressId;
         this.street = street;
         this.city = city;
         this.state = state;

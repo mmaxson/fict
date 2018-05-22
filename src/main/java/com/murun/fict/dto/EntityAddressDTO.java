@@ -2,12 +2,20 @@ package com.murun.fict.dto;
 
 import com.murun.fict.model.Address;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public class EntityAddressDTO implements Serializable {
+    @NotNull
     private Integer entityAddressId;
+
+    @NotNull
     private Integer addressTypeId;
+
+    @NotNull
     private Address address;
+
+    @NotNull
     private Integer legalEntityId;
 
     public EntityAddressDTO() {

@@ -242,7 +242,7 @@ public class TestService {
     }
 
 
-    public static void getMockAuthToken() {
+    public static void checkMockAuthToken() {
 
         long unixTimestamp = Instant.now().plusSeconds(10).getEpochSecond();
         stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlPathEqualTo("/murun/auth/oauth/check_token"))

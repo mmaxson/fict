@@ -41,7 +41,7 @@ public class LegalEntityService {
 
     public LegalEntity getEntityById(Integer legalEntityId) {
         logger.info("getEntityById");
-        return legalEntityRepository.getOne(legalEntityId);
+        return legalEntityRepository.findById(legalEntityId).get();
     }
 
     // TODO reimplement

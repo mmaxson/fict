@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.murun.fict.TestService.LegalEntityTypeTestEnum;
 import static com.murun.fict.TestService.createLegalEntityType;
@@ -71,7 +72,7 @@ public class LegalEntityServiceTest {
     @Test
     public void shouldGetAllLegalEntities() throws Exception {
 
-        Pageable pageRequest = new PageRequest( 0, 20);
+        Pageable pageRequest = PageRequest.of( 0, 20);
         when(legalEntityRepository.findAll(pageRequest)).thenReturn(TestService.createLegalEntitiesPageMixedEntityType());
         assertEquals(3, legalEntityService.getAllLegalEntities(pageRequest).getTotalElements());
     }
@@ -82,7 +83,7 @@ public class LegalEntityServiceTest {
         legalEntityList.get(1).setLegalEntityId(2);
         legalEntityList.get(2).setLegalEntityId(3);
 
-        when(legalEntityRepository.getOne(1)).thenReturn(legalEntityList.get(0));
+        when(legalEntityRepository.findById(1)).thenReturn(Optional.of(legalEntityList.get(0)));
         assertEquals(legalEntityList.get(0), legalEntityService.getEntityById(1));
     }
 
@@ -90,7 +91,7 @@ public class LegalEntityServiceTest {
     public void shouldFilterByEntityType() throws Exception {
 
 
-        Pageable pageRequest = new PageRequest( 0, 20);
+        Pageable pageRequest = PageRequest.of( 0, 20);
 
         when(legalEntityTypeService.getLegalEntityTypeId(LegalEntityTypeTestEnum.CORPORATION.entityTypeText()))
                 .thenReturn(LegalEntityTypeTestEnum.CORPORATION.entityTypeId());

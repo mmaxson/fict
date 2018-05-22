@@ -17,11 +17,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Spliterator;
 
 @RestController()
 @RequestMapping(value="/entities",  produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "LegalEntityController", description = "LegalEntityController")
-//@CrossOrigin(origins = "http://localhost:4200")
 public class LegalEntityController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

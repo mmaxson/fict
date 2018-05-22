@@ -12,6 +12,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -19,7 +21,6 @@ import static org.junit.Assert.assertNull;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes= ApplicationConfiguration.class)
-//@DataJpaTest
 public class LegalEntityTypeRepositoryTest {
 
 
@@ -38,8 +39,8 @@ public class LegalEntityTypeRepositoryTest {
         legalEntityTypeRepository.save(legalEntityTypeSaved);
 
 
-        LegalEntityType legalEntityTypeRetrieved = legalEntityTypeRepository.findOne(1);
-        assertEquals(legalEntityTypeSaved.getLegalEntityTypeId(), legalEntityTypeRetrieved.getLegalEntityTypeId());
+        Optional<LegalEntityType> legalEntityTypeRetrieved = legalEntityTypeRepository.findById(1);
+        assertEquals(legalEntityTypeSaved.getLegalEntityTypeId(), legalEntityTypeRetrieved.get().getLegalEntityTypeId());
     }
 
     @Test
@@ -54,8 +55,8 @@ public class LegalEntityTypeRepositoryTest {
         legalEntityTypeSaved.setLegalEntityTypeText("Some Text Updated");
         legalEntityTypeRepository.save(legalEntityTypeSaved);
 
-        LegalEntityType legalEntityTypeRetrieved = legalEntityTypeRepository.findOne(1);
-        assertEquals(legalEntityTypeSaved.getLegalEntityTypeText(), legalEntityTypeRetrieved.getLegalEntityTypeText());
+        Optional<LegalEntityType> legalEntityTypeRetrieved = legalEntityTypeRepository.findById(1);
+        assertEquals(legalEntityTypeSaved.getLegalEntityTypeText(), legalEntityTypeRetrieved.get().getLegalEntityTypeText());
     }
 
     @Test
