@@ -8,6 +8,7 @@ import com.murun.fict.service.LegalEntityTypeService;
 import com.wordnik.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -17,9 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Spliterator;
 
 @RestController()
 @RequestMapping(value="/entities",  produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,10 +35,10 @@ public class LegalEntityController {
     @Resource
     private AddressTypeService addressTypeService;
 
-
-    @RequestMapping(method = RequestMethod.GET, value = "")
-    public ResponseEntity<Page<LegalEntity>> getAllEntities(@RequestParam(value = "entity_type", required = false) String legalEntityTypeText,
-                                                                            Pageable pageRequest) {
+   // @Cacheable(value = "legal-entities", key = "{#legalEntityTypeText,#pageRequest.pageNumber}")
+    @GetMapping(value = "")
+    public ResponseEntity<Page<LegalEntity>> getEntities(@RequestParam(value = "entity_type", required = false) String legalEntityTypeText,
+                                                         Pageable pageRequest) {
 
         Page<LegalEntity> legalEntities;
         if (legalEntityTypeText != null) {
@@ -57,7 +55,7 @@ public class LegalEntityController {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/id/{id}")
+    @GetMapping(value = "/id/{id}")
     public ResponseEntity<LegalEntity> getEntityById(@PathVariable("id") Integer id) {
 
         if (id <= 0) {

@@ -24,17 +24,15 @@ public class LegalEntityService {
     @Resource
     private LegalEntityTypeService legalEntityTypeService;
 
-    @Resource
-    private AddressTypeService addressTypeService;
 
-  //  @Cacheable(value = "getAllLegalEntities")
+
     public Page<LegalEntity> getAllLegalEntities(Pageable pageRequest) {
-        logger.info("getAllLegalEntities  pageable");
+        logger.info("getAllLegalEntities (pageRequest) " + pageRequest.getPageNumber() + ':' + pageRequest.getPageSize() );
         return legalEntityRepository.findAll(pageRequest);
     }
 
     public Page<LegalEntity> getAllEntitiesFilterByEntityType(String onlyLegalEntityTypeText, Pageable pageRequest) {
-        logger.info("getAllEntitiesFilterByEntityType: " + pageRequest.getPageNumber() + ' ' + pageRequest.getPageSize());
+        logger.info("getAllEntitiesFilterByEntityType: " + pageRequest.getPageNumber() + ":" + pageRequest.getPageSize());
         Integer legalEntityTypeId = legalEntityTypeService.getLegalEntityTypeId(onlyLegalEntityTypeText);
         return legalEntityRepository.getAllEntitiesFilterByEntityType(legalEntityTypeId, pageRequest);
     }

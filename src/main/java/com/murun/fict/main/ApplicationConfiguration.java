@@ -1,9 +1,9 @@
 package com.murun.fict.main;
 
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
-import com.murun.fict.filter.ApplicationCorsFilter;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.*;
 import org.springframework.core.Ordered;
@@ -42,12 +42,11 @@ import java.util.Properties;
 
 @EnableWebSecurity
 @EnableJpaRepositories("com.murun.fict.*")
-//@EnableCaching
 @Configuration
 @EnableSwagger2
 @RefreshScope
 
-@Import({ ResourceServerConfiguration.class /*,WebSecurityConfiguration.class*/ })
+@Import({ ResourceServerConfiguration.class })
 public class ApplicationConfiguration  {
 
 
@@ -66,9 +65,9 @@ public class ApplicationConfiguration  {
     @Resource
     private ApplicationProperties applicationProperties;
 
-  //  @Resource
-  //  private JedisConnectionFactory jedisConnFactory;
-
+  /*  @Resource
+    private JedisConnectionFactory jedisConnFactory;
+*/
 
     /*@Profile("dev")
     @Bean
@@ -159,33 +158,22 @@ public class ApplicationConfiguration  {
         return bean;
     }
 
-   /* @Bean
-    public StringRedisSerializer stringRedisSerializer() {
-        return new StringRedisSerializer();
+
+    /*@Bean
+    JedisConnectionFactory jedisConnectionFactory() {
+
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration("localhost", 6379);
+      //  redisStandaloneConfiguration.setPassword(RedisPassword.of("yourRedisPasswordIfAny"));
+        return new JedisConnectionFactory(redisStandaloneConfiguration);
     }
 
 
-
-    /*@Bean
-    public CacheManager cacheManager(RedisTemplate redisTemplate) {
-        RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
-
-        cacheManager.setDefaultExpiration(-1);
-        return cacheManager;
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(jedisConnectionFactory());
+        return template;
     }*/
-
-
-//    @Bean
-//    JedisConnectionFactory jedisConnectionFactory() {
-//        return new JedisConnectionFactory();
-//    }
-
-//    @Bean
-//    public RedisTemplate<String, Object> redisTemplate() {
-//        RedisTemplate<String, Object> template = new RedisTemplate<>();
-//        template.setConnectionFactory(jedisConnectionFactory());
-//        return template;
-//    }
 
     @Bean
     public Docket api() {

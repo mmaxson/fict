@@ -2,13 +2,14 @@ package com.murun.fict.model;
 
 
 
+import org.springframework.data.redis.core.RedisHash;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 
 @Entity
 @Table(name="ADDRESS")
-//@RedisHash("Address")
 public class Address implements Serializable {
 
     @Id

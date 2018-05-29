@@ -28,7 +28,7 @@ public class LegalEntityTypeNameTypeController {
     private LegalEntityTypeNameTypeRepository legalEntityTypeNameTypeRepository;
 
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity<List<LegalEntityTypeNameType>> getAllLegalEntityTypeNameTypes() {
         logger.info("getAllLegalEntityTypeNameTypes: ");
                 List<LegalEntityTypeNameType> legalEntityTypeNameType = legalEntityTypeNameTypeRepository.findAll();

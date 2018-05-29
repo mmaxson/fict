@@ -31,7 +31,7 @@ public class EntityAddressController {
     private EntityAddressService entityAddressService;
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/id/{id}")
+    @GetMapping( value = "/id/{id}")
     public ResponseEntity<Page<EntityAddress>> getAddressesByEntityId(@PathVariable("id") Integer id, Pageable pageRequest) {
         if (id <= 0) {
             throw new IllegalArgumentException(id + " is not a valid entity id.");
@@ -42,19 +42,19 @@ public class EntityAddressController {
     }
 
 
-    @RequestMapping(method = RequestMethod.PUT)
+    @PutMapping
     public ResponseEntity<SuccessResource> updateEntityAddress(@Valid @NotNull @RequestBody EntityAddressDTO dto) {
         entityAddressService.saveEntityAddress(dto);
         return new ResponseEntity<SuccessResource>(new SuccessResource("0", "Successfully saved."), new HttpHeaders(), HttpStatus.OK );
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<SuccessResource> addEntityAddress(@Valid @NotNull @RequestBody EntityAddressDTO dto) {
         entityAddressService.saveEntityAddress(dto);
         return new ResponseEntity<SuccessResource>(new SuccessResource("0", "Successfully created."), new HttpHeaders(), HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/id/{id}")
+    @DeleteMapping(value = "/id/{id}")
     public ResponseEntity<SuccessResource> deleteEntityAddress(@PathVariable("id") Integer id) {
         Integer retVal = entityAddressService.deleteEntityAddressesByEntityAddressId(id);
         return new ResponseEntity<SuccessResource>(new SuccessResource( retVal.toString(), "Successfully deleted."), new HttpHeaders(), HttpStatus.OK );
