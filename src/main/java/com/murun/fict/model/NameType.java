@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Table(name="NAME_TYPE")
 public class NameType implements Serializable {
 
+    @org.springframework.data.annotation.Id
     @Id
     @Column(name = "NAME_TYPE_ID")
     @JsonIgnore

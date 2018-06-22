@@ -216,6 +216,13 @@ public class TestService {
         return retVal;
     }
 
+    public static LegalEntityRedis createCorporateLegalEntityRedis(){
+        LegalEntityRedis retVal = new LegalEntityRedis();
+     //   retVal.setLegalEntityType(createLegalEntityType(LegalEntityTypeTestEnum.CORPORATION));
+     //   retVal.setEntityNames( new HashSet<EntityName>());
+        return retVal;
+    }
+
     public static LegalEntity createLivingTrustLegalEntity(){
         LegalEntity retVal = new LegalEntity();
         retVal.setLegalEntityType(createLegalEntityType(LegalEntityTypeTestEnum.LIVING_TRUST));
@@ -241,6 +248,15 @@ public class TestService {
         return new PageImpl(legalEntities);
     }
 
+
+    public static Page<LegalEntityRedis> createLegalEntitiesRedisPageCorporationsOnly(){
+
+        List<LegalEntityRedis> legalEntities = new ArrayList<>();
+        legalEntities.add(TestService.createCorporateLegalEntityRedis());
+        legalEntities.add(TestService.createCorporateLegalEntityRedis());
+        legalEntities.add(TestService.createCorporateLegalEntityRedis());
+        return new PageImpl(legalEntities);
+    }
 
     public static void checkMockAuthToken() {
 

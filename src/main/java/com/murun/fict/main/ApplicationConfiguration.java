@@ -2,12 +2,19 @@ package com.murun.fict.main;
 
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.*;
 import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -45,7 +52,7 @@ import java.util.Properties;
 @Configuration
 @EnableSwagger2
 @RefreshScope
-
+@EnableRedisRepositories("com.murun.fict.*")
 @Import({ ResourceServerConfiguration.class })
 public class ApplicationConfiguration  {
 
@@ -64,10 +71,6 @@ public class ApplicationConfiguration  {
 
     @Resource
     private ApplicationProperties applicationProperties;
-
-  /*  @Resource
-    private JedisConnectionFactory jedisConnFactory;
-*/
 
     /*@Profile("dev")
     @Bean
@@ -158,22 +161,19 @@ public class ApplicationConfiguration  {
         return bean;
     }
 
-
     /*@Bean
-    JedisConnectionFactory jedisConnectionFactory() {
-
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration("localhost", 6379);
-      //  redisStandaloneConfiguration.setPassword(RedisPassword.of("yourRedisPasswordIfAny"));
-        return new JedisConnectionFactory(redisStandaloneConfiguration);
-    }
-
+    public RedisConnectionFactory connectionFactory() {
+        return new LettuceConnectionFactory();
+    }*/
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(jedisConnectionFactory());
+    public RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory connectionFactory) {
+
+        RedisTemplate<byte[], byte[]> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
         return template;
-    }*/
+    }
 
     @Bean
     public Docket api() {

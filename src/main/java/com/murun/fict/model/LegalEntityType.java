@@ -1,16 +1,19 @@
 package com.murun.fict.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
 
-@javax.persistence.Entity
+@Entity
 @Table(name="LEGAL_ENTITY_TYPE")
 public class LegalEntityType implements Serializable {
+
 
     @Id
     @Column(name = "LEGAL_ENTITY_TYPE_ID")
@@ -63,5 +66,13 @@ public class LegalEntityType implements Serializable {
         int result = getLegalEntityTypeId();
         result = 31 * result + (getLegalEntityTypeText() != null ? getLegalEntityTypeText().hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "LegalEntityType{" +
+                "legalEntityTypeId=" + legalEntityTypeId +
+                ", legalEntityTypeText='" + legalEntityTypeText + '\'' +
+                '}';
     }
 }

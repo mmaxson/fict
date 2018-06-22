@@ -31,7 +31,7 @@ public class LegalEntityTypeNameTypeController {
     @GetMapping
     public ResponseEntity<List<LegalEntityTypeNameType>> getAllLegalEntityTypeNameTypes() {
         logger.info("getAllLegalEntityTypeNameTypes: ");
-                List<LegalEntityTypeNameType> legalEntityTypeNameType = legalEntityTypeNameTypeRepository.findAll();
+        List<LegalEntityTypeNameType> legalEntityTypeNameType = legalEntityTypeNameTypeRepository.findAll();
         return new ResponseEntity<List<LegalEntityTypeNameType>>(legalEntityTypeNameType, new HttpHeaders(), HttpStatus.OK);
     }
 

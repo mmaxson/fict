@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 public interface LegalEntityRepository extends JpaRepository<LegalEntity, Integer> {
 
     @Query("select legalEntity from LegalEntity as legalEntity where legalEntity.legalEntityType.legalEntityTypeId = :legalEntityTypeId")
-    Page<LegalEntity> getAllEntitiesFilterByEntityType(@Param("legalEntityTypeId") Integer legalEntityTypeId, Pageable page);
+    Page<LegalEntity> getEntitiesFilterByLegalEntityTypeId(@Param("legalEntityTypeId") Integer legalEntityTypeId, Pageable page);
 
    /* // TODO fix
     @Query("select legalEntity from LegalEntity as legalEntity where upper(legalEntity.entityAddresses.address.state) = upper(:state)")

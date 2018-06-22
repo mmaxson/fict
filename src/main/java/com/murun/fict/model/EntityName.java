@@ -6,25 +6,27 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@javax.persistence.Entity
+@Entity
 @Table(name="ENTITY_NAME")
 public class EntityName implements Serializable {
 
+  //  @org.springframework.data.annotation.Id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ENTITY_NAME_ID")
     @JsonIgnore
     private Integer entityNameId;
 
+ //   @Reference
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "NAME_TYPE_ID", nullable = false)
     private NameType nameType;
 
     @Column(name = "NAME")
-    private String Name;
+    private String name;
 
 
-
+  //  @Reference
     @ManyToOne
     @JoinColumn(name = "LEGAL_ENTITY_ID", nullable = true )
     @JsonBackReference
@@ -53,11 +55,11 @@ public class EntityName implements Serializable {
 
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
 
@@ -73,7 +75,7 @@ public class EntityName implements Serializable {
     public String toString() {
         return "EntityName{" +
                 "nameType=" + nameType +
-                ", Name='" + Name + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

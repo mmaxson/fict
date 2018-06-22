@@ -1,6 +1,8 @@
 package com.murun.fict.service;
 
 import com.murun.fict.model.LegalEntity;
+import com.murun.fict.model.LegalEntityRedis;
+import com.murun.fict.repository.LegalEntityRedisRepository;
 import com.murun.fict.repository.LegalEntityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 @Service
@@ -22,6 +25,9 @@ public class LegalEntityService {
     LegalEntityRepository legalEntityRepository;
 
     @Resource
+    LegalEntityRedisRepository legalEntityRedisRepository;
+
+    @Resource
     private LegalEntityTypeService legalEntityTypeService;
 
 
@@ -31,11 +37,34 @@ public class LegalEntityService {
         return legalEntityRepository.findAll(pageRequest);
     }
 
-    public Page<LegalEntity> getAllEntitiesFilterByEntityType(String onlyLegalEntityTypeText, Pageable pageRequest) {
+    public Page<LegalEntityRedis> getAllEntitiesFilterByEntityType(String onlyLegalEntityTypeText, Pageable pageRequest) {
+        logger.info("getAllEntitiesFilterByEntityType(R): " + pageRequest.getPageNumber() + ":" + pageRequest.getPageSize());
+        Integer legalEntityTypeId = legalEntityTypeService.getLegalEntityTypeId(onlyLegalEntityTypeText);
+
+        /*Page<LegalEntityRedis> retVal = legalEntityRedisRepository.getEntitiesFilterByLegalEntityTypeIdOrderByOrdering(legalEntityTypeId, pageRequest);
+        System.out.println("retVal 1---------------------------------------------------------------------------" + legalEntityTypeId);*/
+
+        Page<LegalEntityRedis> retVal = legalEntityRedisRepository.findAll(pageRequest);
+        System.out.println("retVal 2---------------------------------------------------------------------------" + legalEntityTypeId);
+
+      /* for( LegalEntityRedis red: retVal) {
+           System.out.println( red.getLegalEntityId()+ ":" + red.getLegalEntityTypeId());
+       }*/
+
+        return retVal;
+    }
+
+   /* public Page<LegalEntity> getAllEntitiesFilterByEntityType(String onlyLegalEntityTypeText, Pageable pageRequest) {
         logger.info("getAllEntitiesFilterByEntityType: " + pageRequest.getPageNumber() + ":" + pageRequest.getPageSize());
         Integer legalEntityTypeId = legalEntityTypeService.getLegalEntityTypeId(onlyLegalEntityTypeText);
-        return legalEntityRepository.getAllEntitiesFilterByEntityType(legalEntityTypeId, pageRequest);
-    }
+
+        Page<LegalEntity> retVal = legalEntityRepository.getEntitiesFilterByLegalEntityTypeIdOrderByOrdering(legalEntityTypeId, pageRequest);
+        System.out.println("retVal---------------------------------------------------------------------------" + legalEntityTypeId);
+        retVal.map(x->x.getEntityNames().iterator().next()).forEach(System.out::println);
+
+
+        return retVal;
+    }*/
 
     public LegalEntity getEntityById(Integer legalEntityId) {
         logger.info("getEntityById");

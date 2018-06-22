@@ -8,10 +8,11 @@ import java.util.Set;
 
 
 
-@javax.persistence.Entity
+@Entity
 @Table(name="LEGAL_ENTITY")
 public class LegalEntity implements Serializable {
 
+    @org.springframework.data.annotation.Id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "LEGAL_ENTITY_ID")
@@ -22,6 +23,7 @@ public class LegalEntity implements Serializable {
     @JoinColumn(name = "LEGAL_ENTITY_TYPE_ID", nullable = false)
    // @JsonIgnore
     private LegalEntityType legalEntityType;
+
 
     @OneToMany(mappedBy = "legalEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
@@ -97,7 +99,8 @@ public class LegalEntity implements Serializable {
     public String toString() {
         return "LegalEntity{" +
                 "legalEntityId=" + legalEntityId +
-                ", entityNames=" + entityNames +
+        //        "legalEntityTypeId=" + legalEntityType.getLegalEntityTypeId() +
+        //        ", entityNames=" + entityNames +
                 '}';
     }
 }

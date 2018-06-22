@@ -66,4 +66,9 @@ public class AddressTypeServiceTest {
     public void shouldNotFindEntityTypeIdByEntityTypeText() throws Exception {
         assertNull( addressTypeService.getAddressTypeId("zzz"));
     }
+
+    @Test
+    public void shouldGetEntityTypeText() throws Exception {
+        assertEquals( "Residence",  addressTypeService.getAddressTypeText(1));
+    }
 }

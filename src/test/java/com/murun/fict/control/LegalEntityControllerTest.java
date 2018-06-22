@@ -98,7 +98,7 @@ public class LegalEntityControllerTest {
 
         given(legalEntityTypeService.isValidLegalEntityType(TestService.LegalEntityTypeTestEnum.CORPORATION.entityTypeText())).willReturn(true);
         given(legalEntityService.getAllEntitiesFilterByEntityType("Corporation", PageRequest.of( 0, 20)))
-                .willReturn(TestService.createLegalEntitiesPageCorporationsOnly());
+                .willReturn(TestService.createLegalEntitiesRedisPageCorporationsOnly());
 
         mockMvc.perform( get("/entities?entity_type=Corporation")
                 .param("access_token", "token"))

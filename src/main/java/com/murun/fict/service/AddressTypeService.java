@@ -32,8 +32,6 @@ public class AddressTypeService {
         addressTypeRepository.findAll().forEach( x -> addressTypes.put(x.getAddressTypeId(),x.getAddressTypeText()));
     }
 
-
-
     public boolean isValidAddressType(String addressTypeText){
         return addressTypeReverseLookup.get(addressTypeText.toLowerCase()) != null;
     }

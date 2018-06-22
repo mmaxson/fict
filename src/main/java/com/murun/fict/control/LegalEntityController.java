@@ -2,6 +2,7 @@ package com.murun.fict.control;
 
 
 import com.murun.fict.model.LegalEntity;
+import com.murun.fict.model.LegalEntityRedis;
 import com.murun.fict.service.AddressTypeService;
 import com.murun.fict.service.LegalEntityService;
 import com.murun.fict.service.LegalEntityTypeService;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 @RestController()
-@RequestMapping(value="/entities",  produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/entities", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(value = "LegalEntityController", description = "LegalEntityController")
 public class LegalEntityController {
 
@@ -35,23 +36,16 @@ public class LegalEntityController {
     @Resource
     private AddressTypeService addressTypeService;
 
-   // @Cacheable(value = "legal-entities", key = "{#legalEntityTypeText,#pageRequest.pageNumber}")
     @GetMapping(value = "")
-    public ResponseEntity<Page<LegalEntity>> getEntities(@RequestParam(value = "entity_type", required = false) String legalEntityTypeText,
-                                                         Pageable pageRequest) {
+    public ResponseEntity<Page<LegalEntityRedis>> getEntities(@RequestParam(value = "entity_type", required = true) String legalEntityTypeText,
+                                                              Pageable pageRequest) {
 
-        Page<LegalEntity> legalEntities;
-        if (legalEntityTypeText != null) {
-            if (!legalEntityTypeService.isValidLegalEntityType(legalEntityTypeText)) {
-                throw new IllegalArgumentException(legalEntityTypeText + " is not a valid entity type.");
-            }
-
-            legalEntities = legalEntityService.getAllEntitiesFilterByEntityType(legalEntityTypeText, pageRequest);
-
-        } else {
-            legalEntities = legalEntityService.getAllLegalEntities(pageRequest);
+        if (!legalEntityTypeService.isValidLegalEntityType(legalEntityTypeText)) {
+            throw new IllegalArgumentException(legalEntityTypeText + " is not a valid entity type.");
         }
-        return new ResponseEntity<Page<LegalEntity>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
+
+        Page<LegalEntityRedis> legalEntities = legalEntityService.getAllEntitiesFilterByEntityType(legalEntityTypeText, pageRequest);
+        return new ResponseEntity<Page<LegalEntityRedis>>(legalEntities, new HttpHeaders(), HttpStatus.OK);
     }
 
 

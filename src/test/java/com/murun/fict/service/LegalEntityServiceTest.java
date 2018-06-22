@@ -95,7 +95,7 @@ public class LegalEntityServiceTest {
 
         when(legalEntityTypeService.getLegalEntityTypeId(LegalEntityTypeTestEnum.CORPORATION.entityTypeText()))
                 .thenReturn(LegalEntityTypeTestEnum.CORPORATION.entityTypeId());
-        when(legalEntityRepository.getAllEntitiesFilterByEntityType(LegalEntityTypeTestEnum.CORPORATION.entityTypeId(), pageRequest))
+        when(legalEntityRepository.getEntitiesFilterByLegalEntityTypeId(LegalEntityTypeTestEnum.CORPORATION.entityTypeId(), pageRequest))
                 .thenReturn(TestService.createLegalEntitiesPageMixedEntityType());
         assertEquals(3, legalEntityService.getAllEntitiesFilterByEntityType(LegalEntityTypeTestEnum.CORPORATION.entityTypeText(), pageRequest).getTotalElements());
     }
