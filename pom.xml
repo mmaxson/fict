@@ -24,6 +24,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <docker.image.prefix>${env.USER}</docker.image.prefix>
+        <sonar.language>java</sonar.language>
     </properties>
 
     <dependencies>
